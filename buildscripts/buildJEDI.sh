@@ -29,8 +29,10 @@ echo $ecbuild_cmd
 echo $bundle_dir
 
 #---- load build environment
+set +x
 module use $JEDIOPT/modulefiles/core
 module load $metamodule
+set -x
 
 #---- setup clone/build directories
 if [ ! -d $bundle_dir ]; then

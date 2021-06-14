@@ -7,4 +7,7 @@ if len(sys.argv) < 2:
 
 config = Configuration(sys.argv[1])
 for key in sys.argv[3:]:
-    print(f'{key}={config[sys.argv[2]][key]}')
+    if ' ' in config[sys.argv[2]][key]:
+        print(f'{key}="{config[sys.argv[2]][key]}"')
+    else:
+        print(f'{key}={config[sys.argv[2]][key]}')
