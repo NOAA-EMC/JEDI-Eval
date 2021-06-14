@@ -1,6 +1,6 @@
 user:
-  build_dir: /scratch1/NCEPDEV/stmp4/Cory.R.Martin/jedi/build
-  bundle_dir: /scratch1/NCEPDEV/stmp4/Cory.R.Martin/jedi/bundle
+  build_dir: /scratch1/NCEPDEV/stmp4/${USER}/jedi/build
+  bundle_dir: /scratch1/NCEPDEV/stmp4/${USER}/jedi/bundle
   account: da-cpu
   clean_build: YES
   clean_bundle: NO
