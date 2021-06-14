@@ -25,7 +25,7 @@ def gen_bundle(projects, outdir, ufs=False):
         outf.write('ecbuild_bundle( PROJECT jedicmake GIT "https://github.com/jcsda-internal/jedi-cmake.git" BRANCH develop UPDATE )\n')
         outf.write('include( jedicmake/cmake/Functions/git_functions.cmake  )\n')
         # determine if UFS or FV3CORE
-        fv3model = 'UFS' if use else 'FV3CORE'
+        fv3model = 'UFS' if ufs else 'FV3CORE'
         outf.write(f'set(FV3_FORECAST_MODEL "{fv3model}" CACHE\n')
         outf.write('set_property(CACHE FV3_FORECAST_MODEL PROPERTY STRINGS "FV3CORE" "UFS" "GEOS")\n')
         # loop through projects/repositories now
@@ -37,7 +37,7 @@ def gen_bundle(projects, outdir, ufs=False):
                 branch = f'TAG {repodict["tag"]}'
             else:
                 raise KeyError(f'Neither branch nor tag defined for {repo}')
-            update = 'UDATE' if repodict['update'] else ''
+            update = 'UPDATE' if repodict['update'] else ''
             outf.write(f'ecbuild_bundle( PROJECT {repo} GIT "{url}" {branch} {update})\n')
         # finalize bundle
         outf.write('ecbuild_bundle_finalize()\n')
