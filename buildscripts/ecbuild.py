@@ -33,12 +33,13 @@ def gen_bundle(projects, outdir, ufs=False):
             url = repodict['url']
             if 'branch' in repodict:
                 branch = f'BRANCH {repodict["branch"]}'
+                if repodict.get('update', True):
+                    branch = f'{branch} UPDATE'
             elif 'tag' in repodict:
                 branch = f'TAG {repodict["tag"]}'
             else:
                 raise KeyError(f'Neither branch nor tag defined for {repo}')
-            update = 'UPDATE' if repodict['update'] else ''
-            outf.write(f'ecbuild_bundle( PROJECT {repo} GIT "{url}" {branch} {update})\n')
+            outf.write(f'ecbuild_bundle( PROJECT {repo} GIT "{url}" {branch})\n')
         # finalize bundle
         outf.write('ecbuild_bundle_finalize()\n')
     print(f'Wrote bundle CMakeLists file to {outfile}')

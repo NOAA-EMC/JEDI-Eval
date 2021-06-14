@@ -2,52 +2,39 @@ repositories:
   crtm:
     url: https://github.com/jcsda-internal/crtm.git
     branch: release/crtm_jedi
-    update: True
   oops:
     url: https://github.com/jcsda-internal/oops.git
     branch: develop
-    update: True
   saber:
     url: https://github.com/jcsda-internal/saber.git
     branch: develop
-    update: True
   ioda:
     url: https://github.com/jcsda-internal/ioda.git
     branch: develop
-    update: True
   ufo:
     url: https://github.com/jcsda-internal/ufo.git
     branch: develop
-    update: True
   fms:
     url: https://github.com/jcsda-internal/FMS.git
     branch: release-stable
-    update: True
   fv3:
     url: https://github.com/jcsda-internal/GFDL_atmos_cubed_sphere.git
     branch: release-stable
-    update: True
   fv3-jedi-lm:
     url: https://github.com/jcsda-internal/fv3-jedi-linearmodel.git
     branch: develop
-    update: True
   femps:
     url: https://github.com/jcsda-internal/femps.git
     branch: develop
-    update: True
   fv3-jedi:
     url: https://github.com/jcsda-internal/fv3-jedi.git
     branch: develop
-    update: True
   ioda-data:
     url: https://github.com/JCSDA-internal/ioda-data.git
     branch: develop
-    update: True
   ufo-data:
     url: https://github.com/JCSDA-internal/ufo-data.git
     branch: develop
-    update: True
   fv3-jedi-data:
     url: https://github.com/JCSDA-internal/fv3-jedi-data.git
     branch: develop
-    update: True
