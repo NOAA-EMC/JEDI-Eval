@@ -23,8 +23,8 @@ src_yaml=$gitdir/buildscripts/source_yaml
 gen_bundle=$gitdir/buildscripts/create_bundle
 
 #---- source needed shell variables
-$(eval $src_yaml $USERYAML user account build_dir bundle_dir clean_build clean_bundle update_jedi test_jedi)
-$(eval $src_yaml $PLATFORMYAML platform JEDIOPT metamodule make_cmd ecbuild_cmd)
+eval $($src_yaml $USERYAML user account build_dir bundle_dir clean_build clean_bundle update_jedi test_jedi)
+eval $($src_yaml $PLATFORMYAML platform JEDIOPT metamodule make_cmd ecbuild_cmd)
 echo $ecbuild_cmd
 echo $bundle_dir
 

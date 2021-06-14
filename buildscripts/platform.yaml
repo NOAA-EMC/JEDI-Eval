@@ -2,6 +2,6 @@ platform:
   platform_name: hera
   JEDIOPT: /scratch1/NCEPDEV/jcsda/jedipara/opt/modules
   metamodule: jedi/intel-impi/2020.2/ecbuild35
-  make_cmd: "make -j8"
+  make_cmd: 'make -j8'
   ecbuild_cmd: 'ecbuild -DMPIEXEC_EXECUTABLE=`which srun` -DMPIEXEC_NUMPROC_FLAG="-n"'
   
