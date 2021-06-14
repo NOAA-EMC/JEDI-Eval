@@ -26,7 +26,7 @@ def gen_bundle(projects, outdir, ufs=False):
         outf.write('include( jedicmake/cmake/Functions/git_functions.cmake  )\n')
         # determine if UFS or FV3CORE
         fv3model = 'UFS' if ufs else 'FV3CORE'
-        outf.write(f'set(FV3_FORECAST_MODEL "{fv3model}" CACHE\n')
+        outf.write(f'set(FV3_FORECAST_MODEL "{fv3model}" CACHE STRING "Choose which MODEL to build with")\n')
         outf.write('set_property(CACHE FV3_FORECAST_MODEL PROPERTY STRINGS "FV3CORE" "UFS" "GEOS")\n')
         # loop through projects/repositories now
         for repo, repodict in projects.items():
