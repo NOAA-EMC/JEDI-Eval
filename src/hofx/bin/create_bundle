@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from solo.configuration import Configuration
+from hofx.ecbuild import gen_bundle
 import click
-import ecbuild # put this in a real module later like import ufsjedi.ecbuild?
 
 @click.command()
 @click.argument('repoyaml', required=True)
@@ -11,7 +11,7 @@ def create_bundle(repoyaml, bundledir):
     # and use ecbuild.gen_bundle to write a
     # CMakeLists.txt file in bundle directory
     config = Configuration(repoyaml)
-    ecbuild.gen_bundle(config['repositories'], bundledir, ufs=False)
+    gen_bundle(config['repositories'], bundledir, ufs=False)
 
 
 if __name__ == '__main__':
