@@ -1,4 +1,6 @@
-module use /scratch1/NCEPDEV/jcsda/jedipara/opt/modules/modulefiles/core
+module purge
+export JEDI_OPT=/scratch1/NCEPDEV/jcsda/jedipara/opt/modules/
+module use $JEDI_OPT/modulefiles/core
 module load jedi/intel-impi/2020.2/ecbuild35
 module use /contrib/miniconda3/modulefiles
 module use /home/Rahul.Mahajan/opt/modulefiles/stack
