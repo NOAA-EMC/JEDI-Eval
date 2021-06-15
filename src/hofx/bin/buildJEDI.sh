@@ -1,9 +1,9 @@
 #!/bin/bash
 # buildJEDI.sh
-# Usage: buildJEDI.sh /path/to/user.yaml /path/to/repos.yaml /path/to/platform.yaml
+# Usage: buildJEDI.sh /path/to/user.yaml /path/to/repos.yaml
 # This script will do the following:
-# - source YAML files to get configuration
 # - setup build environment
+# - source YAML files to get configuration
 # - create clone/build directories
 # - create CMakeLists.txt file for ecbuild
 # - run ecbuild
@@ -15,22 +15,20 @@ set -eux
 #---- get command line arguments
 USERYAML=$1
 REPOYAML=$2
-PLATFORMYAML=$3
 
 #---- other variables
 gitdir=$PWD/..
-src_yaml=$gitdir/buildscripts/source_yaml
-gen_bundle=$gitdir/buildscripts/create_bundle
+src_yaml=$gitdir/bin/source_yaml
+gen_bundle=$gitdir/bin/create_bundle
 
-#---- source needed shell variables
-eval $($src_yaml $USERYAML user account build_dir bundle_dir clean_build clean_bundle update_jedi test_jedi)
-eval $($src_yaml $PLATFORMYAML platform JEDIOPT metamodule make_cmd ecbuild_cmd)
-
-#---- load build environment
+#---- get machine and setup build environment
 set +x
-module use $JEDIOPT/modulefiles/core
-module load $metamodule
+machine='hera' # placeholder
+source $gitdir/cfg/platform/$machine/buildJEDI
 set -x
+
+#---- source needed shell variables from user YAML
+eval $($src_yaml $USERYAML user account build_dir bundle_dir clean_build clean_bundle update_jedi test_jedi)
 
 #---- setup clone/build directories
 if [ ! -d $bundle_dir ]; then
@@ -48,15 +46,6 @@ else
     rm -rf $build_dir
   fi
 fi
-
-# hard code for test
-set +x
-module use /contrib/miniconda3/modulefiles
-module use /home/Rahul.Mahajan/opt/modulefiles/stack
-module load hpc/1.1.0
-module load hpc-miniconda3/4.5.12
-module load r2d2/1.0.0
-set -x
 
 #---- create ecbuild CMakeLists.txt file
 $gen_bundle $REPOYAML $bundle_dir

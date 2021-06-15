@@ -29,6 +29,9 @@ repositories:
   fv3-jedi:
     url: https://github.com/jcsda-internal/fv3-jedi.git
     branch: develop
+  # iodaconv:
+  #   url: https://github.com/jcsda-internal/ioda-converters.git
+  #   branch: develop
   ioda-data:
     url: https://github.com/JCSDA-internal/ioda-data.git
     branch: develop
