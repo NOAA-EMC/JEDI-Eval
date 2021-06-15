@@ -22,7 +22,9 @@ USERYAML=$1
 REPOYAML=$2
 
 #---- other variables
-gitdir=$PWD/..
+MYPATH=`readlink -f "$0"`
+MYDIR=`dirname "$MYPATH"`
+gitdir=$MYDIR/..
 src_yaml=$gitdir/bin/source_yaml
 gen_bundle=$gitdir/bin/create_bundle
 
