@@ -25,8 +25,6 @@ gen_bundle=$gitdir/buildscripts/create_bundle
 #---- source needed shell variables
 eval $($src_yaml $USERYAML user account build_dir bundle_dir clean_build clean_bundle update_jedi test_jedi)
 eval $($src_yaml $PLATFORMYAML platform JEDIOPT metamodule make_cmd ecbuild_cmd)
-echo $ecbuild_cmd
-echo $bundle_dir
 
 #---- load build environment
 set +x
@@ -50,6 +48,15 @@ else
     rm -rf $build_dir
   fi
 fi
+
+# hard code for test
+set +x
+module use /contrib/miniconda3/modulefiles
+module use /home/Rahul.Mahajan/opt/modulefiles/stack
+module load hpc/1.1.0
+module load hpc-miniconda3/4.5.12
+module load r2d2/1.0.0
+set -x
 
 #---- create ecbuild CMakeLists.txt file
 $gen_bundle $REPOYAML $bundle_dir
