@@ -22,11 +22,12 @@ USERYAML=$1
 REPOYAML=$2
 
 #---- other variables
+# REMOVE later
 MYPATH=`readlink -f "$0"`
 MYDIR=`dirname "$MYPATH"`
 gitdir=$MYDIR/..
-src_yaml=$gitdir/bin/source_yaml
-gen_bundle=$gitdir/bin/create_bundle
+alias source_yaml=$gitdir/bin/source_yaml
+alias create_bundle=$gitdir/bin/create_bundle
 
 #---- get machine and setup build environment
 set +x
@@ -35,7 +36,7 @@ source $gitdir/cfg/platform/$machine/buildJEDI
 set -x
 
 #---- source needed shell variables from user YAML
-eval $($src_yaml $USERYAML user account build_dir bundle_dir clean_build clean_bundle update_jedi test_jedi)
+eval $(source_yaml $USERYAML user account build_dir bundle_dir clean_build clean_bundle update_jedi test_jedi)
 
 #---- setup variables based on scheduler
 if [ $scheduler == "slurm" ]; then
@@ -46,21 +47,11 @@ if [ $scheduler == "slurm" ]; then
 fi
 
 #---- setup clone/build directories
-if [ ! -d $bundle_dir ]; then
-  mkdir -p $bundle_dir
-else
-  if [ $clean_bundle == "YES" ]; then
-    rm -rf $bundle_dir
-  fi
-fi
+[[ ${clean_bundle:-} =~ [YyTt] ]] && rm -rf $bundle_dir
+[[ ! -d $bundle_dir ]] && mkdir -p $bundle_dir
 
-if [ $clean_build == "YES" ]; then
-  rm -rf $build_dir
-fi
-
-if [ ! -d $build_dir ]; then
-  mkdir -p $build_dir
-fi
+[[ ${clean_build:-} =~ [YyTt] ]] && rm -rf $build_dir
+[[ ! -d $build_dir ]] && mkdir -p $build_dir
 
 #----- TEMPORARY
 set +u
@@ -69,21 +60,19 @@ set -u
 #----- END TEMPORARY
 
 #---- create ecbuild CMakeLists.txt file
-$gen_bundle $REPOYAML $bundle_dir
+create_bundle $REPOYAML $bundle_dir
 
 #---- run ecbuild
 cd $build_dir
 $ecbuild_cmd $bundle_dir
 
 #---- run make update
-if [ $update_jedi == "YES" ]; then
-  make update
-fi
+[[ ${update_jedi:-} =~ [YyTt] ]] && make update
 
 #---- run make command
 $make_cmd
 
 #---- run ctests
-if [ $test_jedi == "YES" ]; then
-  ctest
-fi
+[[ ${test_jedi:-} =~ [YyTt] ]] && ctest
+
+exit $?
