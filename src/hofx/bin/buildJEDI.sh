@@ -28,6 +28,7 @@ MYDIR=`dirname "$MYPATH"`
 gitdir=$MYDIR/..
 alias source_yaml=$gitdir/bin/source_yaml
 alias create_bundle=$gitdir/bin/create_bundle
+shopt -s expand_aliases
 
 #---- get machine and setup build environment
 set +x
