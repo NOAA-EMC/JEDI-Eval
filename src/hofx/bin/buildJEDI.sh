@@ -73,7 +73,9 @@ $ecbuild_cmd $bundle_dir
 #---- run make command
 $make_cmd
 
-#---- run ctests
-[[ ${test_jedi:-} =~ [YyTt] ]] && ctest
+#---- run the 'get' ctests that need to run on login node
+ctest -R get_
 
+#---- run other ctests if the option is set
+[[ ${test_jedi:-} =~ [YyTt] ]] && ctest -E -R get_
 exit $?
