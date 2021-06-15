@@ -29,13 +29,21 @@ src_yaml=$gitdir/bin/source_yaml
 gen_bundle=$gitdir/bin/create_bundle
 
 #---- get machine and setup build environment
-#set +x
+set +x
 machine='hera' # placeholder
 source $gitdir/cfg/platform/$machine/buildJEDI
-#set -x
+set -x
 
 #---- source needed shell variables from user YAML
 eval $($src_yaml $USERYAML user account build_dir bundle_dir clean_build clean_bundle update_jedi test_jedi)
+
+#---- setup variables based on scheduler
+if [ $scheduler == "slurm" ]; then
+  export SLURM_ACCOUNT=$account
+  export SALLOC_ACCOUNT=$SLURM_ACCOUNT
+  export SBATCH_ACCOUNT=$SLURM_ACCOUNT
+  export SLURM_QOS=debug
+fi
 
 #---- setup clone/build directories
 if [ ! -d $bundle_dir ]; then
