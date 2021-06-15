@@ -1,0 +1,10 @@
+module purge
+export JEDI_OPT=/work/noaa/da/grubin/opt/modules
+module use $JEDI_OPT/modulefiles/core
+module load jedi/intel-impi/ecbuild35
+module use /work/noaa/da/Cory.R.Martin/noscrub/UFO_eval/env/modulefiles
+module load pyvenv/ioda_diags
+
+make_cmd='make -j8'
+#ecbuild_cmd='ecbuild -DMPIEXEC_EXECUTABLE=/opt/slurm/bin/srun -DMPIEXEC_NUMPROC_FLAG="-n" -DBUILD_PYTHON_BINDINGS=ON -DBUILD_IODA_CONVERTERS=ON'
+ecbuild_cmd='ecbuild -DMPIEXEC_EXECUTABLE=/opt/slurm/bin/srun -DMPIEXEC_NUMPROC_FLAG="-n"'
