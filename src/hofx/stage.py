@@ -3,6 +3,7 @@ from solo.basic_files import mkdir
 from solo.date import Hour, DateIncrement
 from solo.logger import Logger
 from solo.stage import Stage
+import os
 
 __all__ = ['background', 'fv3jedi', 'obs']
 
