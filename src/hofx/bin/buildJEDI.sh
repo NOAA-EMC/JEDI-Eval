@@ -28,12 +28,13 @@ MYDIR=`dirname "$MYPATH"`
 gitdir=$MYDIR/..
 alias source_yaml=$gitdir/bin/source_yaml
 alias create_bundle=$gitdir/bin/create_bundle
+alias detect_host=$gitdir/bin/detect_host
 shopt -s expand_aliases
 
 #---- get machine and setup build environment
 set +x
-machine='hera' # placeholder
-source $gitdir/cfg/platform/$machine/buildJEDI
+machine=$(detect_host)
+source $gitdir/cfg/platform/$machine/JEDI
 set -x
 
 #---- source needed shell variables from user YAML

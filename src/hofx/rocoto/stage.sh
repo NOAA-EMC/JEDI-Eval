@@ -10,15 +10,22 @@ MYDIR=`dirname "$MYPATH"`
 gitdir=$MYDIR/..
 alias source_yaml=$gitdir/bin/source_yaml
 alias create_bundle=$gitdir/bin/create_bundle
+alias detect_host=$gitdir/bin/detect_host
 shopt -s expand_aliases
 
 script_dir=$gitdir # what should this variable be? coming from rocoto I assume, and not "$HOMEgfs"
 
 #---- get machine and source runtime environment
 set +x
-machine='hera' # placeholder
-source $gitdir/cfg/platform/$machine/buildJEDI # change to stage later? or is one env sufficient?
+machine=$(detect_host)
+source $gitdir/cfg/platform/$machine/JEDI
 set -x
+
+#----- TEMPORARY
+set +u
+export PYTHONPATH=$PYTHONPATH:$gitdir/../
+set -u
+#----- END TEMPORARY
 
 # stage FV3JEDI files (do this here or as part of experiment setup?)
 python $script_dir/stage_fv3jedi.py $EXPDIR
