@@ -27,13 +27,17 @@ export PYTHONPATH=$PYTHONPATH:$gitdir/../
 set -u
 #----- END TEMPORARY
 
-# stage FV3JEDI files (do this here or as part of experiment setup?)
+#----- export R2D2_CONFIG based off of $EXPDIR/r2d2.yaml
+eval $(source_yaml $EXPDIR/r2d2.yaml r2d2 r2d2_config)
+export R2D2_CONFIG=$r2d2_config
+
+#----- stage FV3JEDI files (do this here or as part of experiment setup?)
 python $script_dir/stage_fv3jedi.py $EXPDIR
 
 # here we need to either set environment variables for stage_*.py or create a YAML file to put in EXPDIR
 # currently there is cycle.yaml and dates are defined but they can also use env vars
 # TODO
 
-# stage cycle dependent files
+#----- stage cycle dependent files
 python $script_dir/stage_obs.py $EXPDIR
 python $script_dir/stage_bkg.py $EXPDIR
