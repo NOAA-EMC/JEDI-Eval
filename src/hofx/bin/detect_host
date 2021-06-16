@@ -3,4 +3,5 @@
 # detect the current host and return a string
 from hofx.tools import detect_host
 
-print(detect_host())
+host = detect_host()
+print(f'{host}' if host is not None else 'Unknown host')
