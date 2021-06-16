@@ -1,6 +1,6 @@
 #!/bin/bash
-# stage.sh
-# stage hofx files
+# concat_diag.sh
+# concatenate diagnostic files from each PE to one file
 set -eux
 
 #----- other variables
@@ -13,8 +13,6 @@ alias create_bundle=$gitdir/bin/create_bundle
 alias detect_host=$gitdir/bin/detect_host
 shopt -s expand_aliases
 
-script_dir=$gitdir # what should this variable be? coming from rocoto I assume, and not "$HOMEgfs"
-
 #----- get machine and source runtime environment
 set +x
 machine=$(detect_host)
@@ -24,16 +22,8 @@ set -x
 #----- TEMPORARY
 set +u
 export PYTHONPATH=$PYTHONPATH:$gitdir/../
+script_dir=../../../darth/hofx/ # temporary for testing
 set -u
 #----- END TEMPORARY
 
-#----- export R2D2_CONFIG based off of $EXPDIR/r2d2.yaml
-eval $(source_yaml $EXPDIR/r2d2.yaml r2d2 r2d2_config)
-export R2D2_CONFIG=$r2d2_config
-
-#----- stage FV3JEDI files (do this here or as part of experiment setup?)
-python $script_dir/stage_fv3jedi.py $EXPDIR
-
-#----- stage cycle dependent files
-python $script_dir/stage_obs.py $EXPDIR
-python $script_dir/stage_bkg.py $EXPDIR
+exit 0 # placeholder for now
