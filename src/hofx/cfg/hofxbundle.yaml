@@ -28,7 +28,8 @@ repositories:
     branch: develop
   fv3-jedi:
     url: https://github.com/jcsda-internal/fv3-jedi.git
-    branch: develop
+    #branch: develop
+    branch: feature/geom_template # for templated geometry yaml
   # iodaconv:
   #   url: https://github.com/jcsda-internal/ioda-converters.git
   #   branch: develop

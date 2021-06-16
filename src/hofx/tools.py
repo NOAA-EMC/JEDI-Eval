@@ -18,7 +18,7 @@ def detect_host():
     if system == 'linux':
         if node.find('orion') != -1:
             return 'orion'
-        elif n.find('hfe') != -1:
+        elif node.find('hfe') != -1:
             return 'hera'
     elif system == 'darwin':
         return 'mac'
