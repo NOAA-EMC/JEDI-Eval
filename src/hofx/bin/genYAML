@@ -1,0 +1,40 @@
+#!/usr/bin/env python
+import click
+import hofx
+import os
+import datetime as dt
+import glob
+
+@click.command()
+@click.argument('task', required=True)
+@click.argument('expdir', type=click.Path(exists=True), required=True)
+@click.argument('yamlout', required=True)
+def gen_yaml(task, expdir, yamlout):
+    """
+    gen_yaml TASK EXPDIR YAMLOUT
+      Generates YAML file for TASK based on configuration YAML files
+      in EXPDIR and writes to YAMLOUT
+
+      Note: will use $CDATE environment variable for current cycle information
+    """
+    # determine the template file
+    template_dir = os.path.join(hofx.hofx_directory, 'cfg', 'templates')
+    template = os.path.join(template_dir, f'{task}.yaml')
+    # get config YAMLs from experiment directory
+    configs = glob.glob(os.path.join(expdir,'*.yaml'))
+    # get main configuration dictionary
+    config = hofx.configuration.read_yaml(configs, template=template)
+    # compute time dependent variables
+    cdate = os.getenv('CDATE', 'YYYYMMDDHH')
+    cdate = dt.datetime.strptime(cdate, '%Y%m%d%H')
+    cycle_config = {}
+    cycle_config['current_cycle'] = cdate.strftime('%Y-%m-%dT%H:%M:%SZ')
+    # update config with cycle_config
+    # replace vars in config
+    # write YAML file out
+    target_dir = os.path.dirname(yamlout)
+    target_name = os.path.basename(yamlout)
+    config.save(target_dir=target_dir, target_name=target_name)
+
+if __name__ == '__main__':
+    gen_yaml()

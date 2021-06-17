@@ -18,12 +18,14 @@ def run_stage(yaml, stage_backgrounds, stage_obs, stage_fv3jedi):
     takes path to YAML file as input
     """
     cfg_dir = os.path.join(hofx.hofx_directory, 'cfg', 'templates')
+    cdate = os.getenv('CDATE', '2000010100') # current cycle date YYYYMMDDHH
     if stage_backgrounds:
         print('Staging backgrounds')
         template = os.path.join(cfg_dir, 'stage_bkg.yaml')
         config = hofx.configuration.read_yaml(yaml, template=template)
         # add time information here
         # update vars in config here
+        config = hofx.tools.replace_vars(config)
         hofx.stage.background(config) # run the stage background function
         # print some log information here
     if stage_obs:
