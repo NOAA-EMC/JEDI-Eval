@@ -5,7 +5,7 @@ import os
 
 @click.command()
 @click.argument('yaml', type=click.Path(exists=True))
-def run_stage(yaml, stage_backgrounds, stage_obs, stage_fv3jedi):
+def run_stage(yaml):
     """
     run_stage(yaml)
     stages files depending on configuration
