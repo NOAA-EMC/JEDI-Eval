@@ -2,9 +2,9 @@ from solo.configuration import Configuration
 from solo.template import TemplateConstants, Template
 from hofx.tools import replace_vars
 
-__all__ = ['read_yaml']
+__all__ = ['read_yaml', 'clean_yaml']
 
-def read_yaml(yamls, template=None):
+def read_yaml(yamls, template=None, config_in=None):
     """
     read_yaml(yamls, template=None)
     read in configuration from one or more YAML files
@@ -12,6 +12,8 @@ def read_yaml(yamls, template=None):
        or a list of paths of files to combine together
      - template=None by default, is a path to a YAML
        file to use as a template for final output
+     - config_in=None by default, is a dictionary containing
+       keys,values that are dynamically generated/in memory
     """
     if isinstance(yamls, list):
         # read multiple YAML files
@@ -22,6 +24,8 @@ def read_yaml(yamls, template=None):
     else:
         # read a single file
         config = Configuration(yamls)
+    if config_in is not None:
+        config.update(config_in)
     if template is not None:
         # read in a template YAML file for final config contents
         config_temp = Configuration(template)
@@ -36,9 +40,22 @@ def read_yaml(yamls, template=None):
     config_out = _include_yaml(config_out)
     # do another find/replace now that there are includes
     config_out = replace_vars(config_out)
+    # now nest down through to see if there are more dictionaries
+    for key, value in config_out.items():
+        if isinstance(value, dict):
+            value = Template.substitute_structure(value, TemplateConstants.DOLLAR_PARENTHESES, config_out.get)
+            value = _include_yaml(value)
+            value = replace_vars(value)
+            for key2, value2 in value.items():
+                if isinstance(value2, dict):
+                    value2 = Template.substitute_structure(value2, TemplateConstants.DOLLAR_PARENTHESES, config_out.get)
+                    value2 = _include_yaml(value2)
+                    value2 = replace_vars(value2)
+    # one final find/replace
+    config_out = replace_vars(config_out)
     if template is not None:
         # remove things not in the template for final output
-        config_out = _clean_yaml(config_out, config_temp)
+        config_out = clean_yaml(config_out, config_temp)
     return config_out
 
 def _include_yaml(config):
@@ -65,7 +82,7 @@ def _include_yaml(config):
                 config[rootkey] = newconfig
     return config
 
-def _clean_yaml(config_out, config_template):
+def clean_yaml(config_out, config_template):
     # remove top level keys in config_out if they do not appear in config_template
     keys_to_del = []
     for key, value in config_out.items():
