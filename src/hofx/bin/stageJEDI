@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+import click
+#import hofx
+import os
+
+@click.command()
+@click.argument('yaml', type=click.Path(exists=True))
+@click.option('-b', '--stage-backgrounds', default=False,
+              help='Stage model backgrounds', show_default=True, is_flag=True)
+@click.option('-o', '--stage-obs', default=False,
+              help='Stage observations', show_default=True, is_flag=True)
+@click.option('-m', '--stage-fv3jedi', default=False,
+              help='Stage FV3-JEDI fix files', show_default=True, is_flag=True)
+def run_stage(yaml, stage_backgrounds, stage_obs, stage_fv3jedi):
+    """
+    run_stage(yaml, stage_backgrounds=False, stage_obs=False, stage_fv3jedi=False)
+    stages files depending on options
+    takes path to YAML file as input
+    """
+    cfg_dir = os.path.join(hofx.hofx_directory, 'cfg', 'templates')
+    if stage_backgrounds:
+        print('Staging backgrounds')
+        template = os.path.join(cfg_dir, 'stage_bkg.yaml')
+        config = hofx.configuration.read_yaml(yaml, template=template)
+        # add time information here
+        # update vars in config here
+        hofx.stage.background(config) # run the stage background function
+        # print some log information here
+    if stage_obs:
+        print('Staging observations')
+        template = os.path.join(cfg_dir, 'stage_obs.yaml')
+        config = hofx.configuration.read_yaml(yaml, template=template)
+        # add time information here
+        # update vars in config here
+        hofx.stage.obs(config) # run the stage obs function
+        # print some log information here
+    if stage_fv3jedi:
+        print('Stage FV3-JEDI fix files')
+        template = os.path.join(cfg_dir, 'stage_fv3jedi.yaml')
+        config = hofx.configuration.read_yaml(yaml, template=template)
+        # add time information here
+        # update vars in config here
+        hofx.stage.fv3jedi(config) # run the stage background function
+        # print some log information here
+
+if __name__ == '__main__':
+    run_stage()
