@@ -70,7 +70,7 @@ def obs(config):
             experiment=config['obs']['obs_dump'],
             date=config['window begin'],
             obs_type=obname,
-            time_window=config['window length'],
+            time_window=config['window_length'],
             target_file=outfile,
             ignore_missing=True,
             database=config['obs']['obs_db'],
