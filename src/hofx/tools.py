@@ -1,5 +1,5 @@
 import platform
-from solo.template import Template
+from solo.template import Template, TemplateConstants
 
 __all__ = ['detect_host', 'process_environment_variables', 'replace_vars']
 

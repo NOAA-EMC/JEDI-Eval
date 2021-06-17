@@ -40,6 +40,19 @@ def read_yaml(yamls, template=None, config_in=None):
     config_out = _include_yaml(config_out)
     # do another find/replace now that there are includes
     config_out = replace_vars(config_out)
+    # now nest down through to see if there are more dictionaries
+    for key, value in config_out.items():
+        if isinstance(value, dict):
+            value = Template.substitute_structure(value, TemplateConstants.DOLLAR_PARENTHESES, config_out.get)
+            value = _include_yaml(value)
+            value = replace_vars(value)
+            for key2, value2 in value.items():
+                if isinstance(value2, dict):
+                    value2 = Template.substitute_structure(value2, TemplateConstants.DOLLAR_PARENTHESES, config_out.get)
+                    value2 = _include_yaml(value2)
+                    value2 = replace_vars(value2)
+    # one final find/replace
+    config_out = replace_vars(config_out)
     if template is not None:
         # remove things not in the template for final output
         config_out = clean_yaml(config_out, config_temp)
