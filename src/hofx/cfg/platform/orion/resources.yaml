@@ -1,0 +1,20 @@
+default:
+  scheduler: slurm
+  account: da-cpu
+  partition: orion
+  qos: batch
+  launch: srun
+  nodes: 1
+  tasks: 1
+  threads: 1
+  walltime: 00:30:00
+  max_cores: 40
+  header: slurm.h
+stage:
+  qos: service
+  walltime: 00:05:00
+  launch: ''
+hofx:
+  walltime: 00:30:00
+  nodes: 1
+  tasks: 24
