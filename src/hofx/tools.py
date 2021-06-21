@@ -38,12 +38,14 @@ def replace_vars(config):
 class Window:
 
     def __init__(self, config):
+        self._config = config
         self.window_length = DateIncrement(config.get('window_length', 'PT6H')) # length of the assimilation window (beginning to end)
         self.window_offset = DateIncrement(config.get('window_offset', 'PT3H')) # offset from end of the window to "analysis time"
         self.step_cycle = DateIncrement(config.get('step_cycle', 'PT6H')) # Cadence
         self.window_type = config.get('window_type', '3d') # 3D or 4D windows
         self.bg_frequency= DateIncrement(config.get('bg_frequency', self.step_cycle)) # Frequency of backgrounds
         self.bg_step= DateIncrement(config.get('bg_step', self.step_cycle)) # Cadence
+        self.info
 
     @property
     def info(self):
@@ -58,7 +60,7 @@ class Window:
 
     @staticmethod
     def analysis_time(current_date):
-        return current_date
+        return str(JediDate(current_date))
 
     def window_end(self, current_date):
         return str(JediDate(current_date) + self.window_offset)
