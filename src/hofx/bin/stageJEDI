@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+import click
+import hofx
+import os
+
+@click.command()
+@click.argument('yaml', type=click.Path(exists=True))
+def run_stage(yaml):
+    """
+    run_stage(yaml)
+    stages files depending on configuration
+    takes path to YAML file as input
+    """
+    config = hofx.configuration.read_yaml(yaml)
+    stage_cfg = config['stage']
+    if 'bkg' in stage_cfg:
+        hofx.stage.background(stage_cfg)
+    if 'obs' in stage_cfg:
+        hofx.stage.obs(stage_cfg)
+    if 'fv3jedi' in stage_cfg:
+        hofx.stage.fv3jedi(stage_cfg)
+
+
+if __name__ == '__main__':
+    run_stage()
