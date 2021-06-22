@@ -1,0 +1,19 @@
+suite:
+  - stage:
+      script: stage.sh
+  - hofx:
+      script: hofx.sh
+      depends:
+        task: stage
+  - merge:
+      script: concat_diag.sh
+      depends:
+        task: hofx
+  - archive:
+      script: arch_diag.sh
+      depends:
+        task: merge
+  - plot:
+      script: plot_diag.sh
+      depends:
+        task: merge

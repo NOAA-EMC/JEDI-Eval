@@ -145,18 +145,17 @@ class Rocoto:
 
         strings = []
 
-        strings.append('<metatask name="%s">\n' % metataskname)
+        strings.append(f'<metatask name="{metataskname}">\n')
         strings.append('\n')
-        strings.append('\t<var name="%s">%s</var>\n' % (varname, str(varval)))
+        strings.append(f'\t<var name="{varname}">{str(varval)}</var>\n')
         if vardict is not None:
             for key in list(vardict.keys()):
                 value = str(vardict[key])
-                strings.append('\t<var name="%s">%s</var>\n' % (key, value))
+                strings.append(f'\t<var name="{key}">{value}</var>\n')
         strings.append('\n')
         tasklines = create_task(task_dict)
         for tl in tasklines:
-            strings.append('%s' %
-                        tl) if tl == '\n' else strings.append('\t%s' % tl)
+            strings.append(f'{tl}') if tl == '\n' else strings.append(f'\t{tl}')
         strings.append('\n')
         strings.append('</metatask>\n')
 
@@ -175,7 +174,7 @@ class Rocoto:
         # Grab task info from the task_dict
         taskname = task_dict.get('taskname', 'demotask')
         cycledef = task_dict.get('cycledef', 'democycle')
-        maxtries = task_dict.get('maxtries', 3)
+        maxtries = str(task_dict.get('maxtries', 3))
         final = task_dict.get('final', False)
         command = task_dict.get('command', 'sleep 10')
         jobname = task_dict.get('jobname', 'demojob')
@@ -190,42 +189,40 @@ class Rocoto:
         envar = task_dict.get('envar', None)
         dependency = task_dict.get('dependency', None)
 
-        str_maxtries = str(maxtries)
         str_final = ' final="true"' if final else ''
         envar = envar if isinstance(envar, list) else [envar]
 
         strings = []
 
-        strings.append('<task name="%s" cycledefs="%s" maxtries="%s"%s>\n' %
-                    (taskname, cycledef, str_maxtries, str_final))
+        strings.append(f'<task name="{taskname}" cycledefs="{cycledef}" maxtries="{maxtries}"{str_final}>\n')
         strings.append('\n')
-        strings.append('\t<command>%s</command>\n' % command)
+        strings.append(f'\t<command>{command}</command>\n')
         strings.append('\n')
-        strings.append('\t<jobname><cyclestr>%s</cyclestr></jobname>\n' % jobname)
-        strings.append('\t<account>%s</account>\n' % account)
-        strings.append('\t<queue>%s</queue>\n' % queue)
+        strings.append(f'\t<jobname><cyclestr>{jobname}</cyclestr></jobname>\n')
+        strings.append(f'\t<account>{account}</account>\n')
+        strings.append(f'\t<queue>{queue}</queue>\n')
         if partition is not None:
-            strings.append('\t<partition>%s</partition>\n' % partition)
+            strings.append(f'\t<partition>{partition}</partition>\n')
         if resources is not None:
-            strings.append('\t%s\n' % resources)
-        strings.append('\t<walltime>%s</walltime>\n' % walltime)
+            strings.append('\t{resources}\n')
+        strings.append(f'\t<walltime>{walltime}</walltime>\n')
         if memory is not None:
-            strings.append('\t<memory>%s</memory>\n' % memory)
+            strings.append(f'\t<memory>{memory}</memory>\n')
         if native is not None:
-            strings.append('\t<native>%s</native>\n' % native)
+            strings.append(f'\t<native>{native}</native>\n')
         strings.append('\n')
-        strings.append('\t<join><cyclestr>%s</cyclestr></join>\n' % log)
+        strings.append(f'\t<join><cyclestr>{log}</cyclestr></join>\n')
         strings.append('\n')
 
         if envar[0] is not None:
             for e in envar:
-                strings.append('\t%s\n' % e)
+                strings.append(f'\t{e}\n')
             strings.append('\n')
 
         if dependency is not None:
             strings.append('\t<dependency>\n')
             for d in dependency:
-                strings.append('\t\t%s\n' % d)
+                strings.append(f'\t\t{d}\n')
             strings.append('\t</dependency>\n')
             strings.append('\n')
 
@@ -247,28 +244,18 @@ class Rocoto:
         dep_type = dep_dict.get('type', None)
 
         if dep_type in ['task', 'metatask']:
-
             string = self._add_task_tag(dep_dict)
-
         elif dep_type in ['data']:
-
             string = self._add_data_tag(dep_dict)
-
         elif dep_type in ['cycleexist']:
-
             string = self._add_cycle_tag(dep_dict)
-
         elif dep_type in ['streq', 'strneq']:
-
             string = self._add_streq_tag(dep_dict)
-
         else:
-
-            msg = 'Unknown dependency type %s' % dep_dict['type']
-            raise KeyError(msg)
+            raise KeyError(f'Unknown dependency type {dep_type}')
 
         if dep_condition is not None:
-            string = '<%s>%s</%s>' % (dep_condition, string, dep_condition)
+            string = f'<{dep_condition}>{string}</{dep_condition}>'
 
         return string
 
@@ -287,13 +274,12 @@ class Rocoto:
         dep_offset = dep_dict.get('offset', None)
 
         if dep_name is None:
-            msg = 'a %s name is necessary for %s dependency' % (dep_type, dep_type)
-            raise KeyError(msg)
+            raise KeyError(f'a {dep_type} name is necessary for {dep_type} dependency')
 
         string = '<'
-        string += '%sdep %s="%s"' % (dep_type, dep_type, dep_name)
+        string += f'{dep_type}dep {dep_type}="{dep_name}"'
         if dep_offset is not None:
-            string += ' cycle_offset="%s"' % dep_offset
+            string += f' cycle_offset="{dep_offset}"'
         string += '/>'
 
         return string
@@ -313,8 +299,7 @@ class Rocoto:
         dep_offset = dep_dict.get('offset', None)
 
         if dep_data is None:
-            msg = 'a data value is necessary for %s dependency' % dep_type
-            raise KeyError(msg)
+            raise KeyError(f'a data value is necessary for {dep_type} dependency')
 
         if dep_offset is None:
             if '@' in dep_data:
@@ -324,12 +309,10 @@ class Rocoto:
                 offset_string_b = ''
                 offset_string_e = ''
         else:
-            offset_string_b = '<cyclestr offset="%s">' % dep_offset
+            offset_string_b = f'<cyclestr offset="{dep_offset}">'
             offset_string_e = '</cyclestr>'
 
-        string = '<datadep>'
-        string += '%s%s%s' % (offset_string_b, dep_data, offset_string_e)
-        string += '</datadep>'
+        string = f'<datadep>{offset_string_b}{dep_data}{offset_string_e}</datadep>'
 
         return string
 
@@ -347,10 +330,9 @@ class Rocoto:
         dep_offset = dep_dict.get('offset', None)
 
         if dep_offset is None:
-            msg = 'an offset value is necessary for %s dependency' % dep_type
-            raise KeyError(msg)
+            raise KeyError(f'an offset value is necessary for {dep_type} dependency')
 
-        string = '<cycleexistdep cycle_offset="%s"/>' % dep_offset
+        string = f'<cycleexistdep cycle_offset="{dep_offset}"/>'
 
         return string
 
@@ -371,18 +353,17 @@ class Rocoto:
         fail = False
         msg = ''
         if dep_left is None:
-            msg += 'a left value is necessary for %s dependency' % dep_type
+            msg += f'a left value is necessary for {dep_type} dependency'
             fail = True
         if dep_right is None:
             if fail:
                 msg += '\n'
-            msg += 'a right value is necessary for %s dependency' % dep_type
+            msg += f'a right value is necessary for {dep_type} dependency'
             fail = True
         if fail:
             raise KeyError(msg)
 
-        string = '<%s><left>%s</left><right>%s</right></%s>' % (
-            dep_type, dep_left, dep_right, dep_type)
+        string = f'<{dep_type}><left>{dep_left}</left><right>{dep_right}</right></{dep_type}>'
 
         return string
 
@@ -424,18 +405,18 @@ class Rocoto:
         strings = []
 
         if dep_condition is not None:
-            strings.append('<%s>' % dep_condition)
+            strings.append(f'<{dep_condition}>')
 
         if dep[0] is not None:
             for d in dep:
                 if dep_condition is None:
-                    strings.append('%s' % d)
+                    strings.append(f'{d}')
                 else:
                     for e in self._traverse(d):
-                        strings.append('\t%s' % e)
+                        strings.append(f'\t{e}')
 
         if dep_condition is not None:
-            strings.append('</%s>' % dep_condition)
+            strings.append(f'</{dep_condition}>')
 
         return strings
 

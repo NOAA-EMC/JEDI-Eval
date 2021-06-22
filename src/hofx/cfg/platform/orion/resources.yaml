@@ -18,3 +18,10 @@ hofx:
   walltime: 00:30:00
   nodes: 1
   tasks: 24
+merge:
+  walltime: 00:15:00
+archive:
+  qos: service
+  walltime: 00:15:00
+plot:
+  walltime: 00:01:00
