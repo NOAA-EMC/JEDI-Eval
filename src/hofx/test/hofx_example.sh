@@ -47,5 +47,6 @@ $gitdir/bin/genYAML hofx $USERYAML $WORKDIR/hofx.yaml
 eval $(source_yaml ${USERYAML}/base.yaml jedi_build)
 # NOT finished do manually!
 nprocs=6 # this will be in YAML eventually
+export OOPS_TRACE=1
 ${APRUN}${nprocs} -t 30:00 $jedi_build/bin/fv3jedi_hofx_nomodel.x $WORKDIR/hofx.yaml
 

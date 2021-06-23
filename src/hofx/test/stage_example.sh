@@ -9,7 +9,7 @@ fi
 set -eux
 
 #---- get command line arguments
-USERYAML=$1
+EXPDIR=$1
 WORKDIR=$2
 
 #---- other variables
@@ -32,7 +32,8 @@ mkdir -p $WORKDIR
 cd $WORKDIR
 
 #---- run genYAML to create YAML file
-$gitdir/bin/genYAML stage $USERYAML $WORKDIR/stage.yaml
+export CDATE=2020121500
+$gitdir/bin/genYAML stage $EXPDIR $WORKDIR/stage.yaml
 
 #---- run stageJEDI based on configuration
 $gitdir/bin/stageJEDI $WORKDIR/stage.yaml
