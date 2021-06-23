@@ -49,7 +49,7 @@ $> source hofx/bin/activate
 
 ### Using self installed python virtual environment:
 ```bash
-$> source pyhofx/bin/activate
+$> source hofx/bin/activate
 (hofx) $>
 ```
 ---
