@@ -27,6 +27,15 @@ set +eux
 machine=$(detect_host)
 source $gitdir/cfg/platform/$machine/JEDI
 set -eux
+eval $(source_yaml ${USERYAML}/base.yaml account)
+
+#---- setup variables based on scheduler
+if [ $scheduler == "slurm" ]; then
+  export SLURM_ACCOUNT=$account
+  export SALLOC_ACCOUNT=$SLURM_ACCOUNT
+  export SBATCH_ACCOUNT=$SLURM_ACCOUNT
+  export SLURM_QOS=debug
+fi
 
 mkdir -p $WORKDIR
 cd $WORKDIR
@@ -37,5 +46,6 @@ $gitdir/bin/genYAML hofx $USERYAML $WORKDIR/hofx.yaml
 #---- run executable
 eval $(source_yaml ${USERYAML}/base.yaml jedi_build)
 # NOT finished do manually!
-$APRUN $jedi_build/fv3jedi_hofx_nomodel.x $WORKDIR/hofx.yaml
+nprocs=6 # this will be in YAML eventually
+${APRUN}${nprocs} -t 30:00 $jedi_build/bin/fv3jedi_hofx_nomodel.x $WORKDIR/hofx.yaml
 

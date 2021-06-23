@@ -11,3 +11,4 @@ state_inc: $(bundle)/fv3-jedi/ewok/gfs/bg.yaml
 model_resolution: c768
 vertical_resolution: 64
 current_dir: $(experiment_dir)/{{current_cycle}}/RESTART
+account: da-cpu
