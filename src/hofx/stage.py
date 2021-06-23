@@ -15,7 +15,7 @@ def background(config):
     """
     # get background time
     # NOTE: will below be handled in config already?
-    bkg_time = Hour(config['cycle']) - DateIncrement(config['window_length'])
+    bkg_time = Hour(config['cycle']) - DateIncrement(config['step_cycle'])
     # create directory
     mkdir(config['bkg']['bkg_dir'])
     # fetch the coupler file first

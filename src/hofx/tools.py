@@ -1,3 +1,4 @@
+import os
 import platform
 from solo.template import Template, TemplateConstants
 from solo.date import JediDate, DateIncrement, Minute
@@ -97,3 +98,28 @@ class Window:
                 background_steps = self.background_steps(current_date)
                 )
         return config
+
+def init_task_config(yamlfile, task=None):
+    """
+    init_task_config(yamlfile, task)
+    initialize config for task `task` using input from `yamlfile`
+    """
+    from hofx.configuration import read_yaml
+    # first read the input config
+    config = read_yaml(yamlfile)
+    # select just config for this task if task exists
+    task_config = config
+    if task is not None:
+        task_config = config[task]
+    # get current cycle information
+    cdate = os.getenv('CDATE', 'YYYYMMDDHH')
+    # create a time window object
+    window = Window(task_config)
+    win_details = window.details(cdate)
+    anl_time = window.analysis_time(cdate)
+    win_details['current_cycle'] = anl_time
+    # update config dictionary
+    task_config = task_config.update(win_details)
+    # find/replace vars in config dictionary
+    task_config = replace_vars(task_config)
+    return task_config
