@@ -22,10 +22,11 @@ alias create_bundle=$gitdir/bin/create_bundle
 alias detect_host=$gitdir/bin/detect_host
 shopt -s expand_aliases
 
-#---- get machine and setup build environment
+#---- get machine and setup runtime environment
 set +eux
 machine=$(detect_host)
 source $gitdir/cfg/platform/$machine/JEDI
+export R2D2_CONFIG=$gitdir/cfg/platform/$machine/r2d2_config.yaml
 set -eux
 
 mkdir -p $WORKDIR
