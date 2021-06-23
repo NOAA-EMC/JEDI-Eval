@@ -26,11 +26,14 @@ def gen_yaml(task, expdir, yamlout):
     config = hofx.configuration.read_yaml(configs, template=template)
     # compute time dependent variables
     cdate = os.getenv('CDATE', 'YYYYMMDDHH')
-    cdate = dt.datetime.strptime(cdate, '%Y%m%d%H')
-    cycle_config = {}
-    cycle_config['current_cycle'] = cdate.strftime('%Y-%m-%dT%H:%M:%SZ')
-    # update config with cycle_config
+    # create a time window object
+    window = hofx.tools.Window(config)
+    win_details = window.details(cdate)
+    anl_time = window.analysis_time(cdate)
     # replace vars in config
+    win_details['current_cycle'] = anl_time
+    config.update(win_details)
+    config = replace_vars(config)
     # write YAML file out
     target_dir = os.path.dirname(yamlout)
     target_name = os.path.basename(yamlout)
