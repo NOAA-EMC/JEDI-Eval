@@ -15,7 +15,7 @@ def background(config):
     """
     # get background time
     # NOTE: will below be handled in config already?
-    bkg_time = Hour(config['cycle']) - DateIncrement(config['window_length'])
+    bkg_time = Hour(config['cycle']) - DateIncrement(config['step_cycle'])
     # create directory
     mkdir(config['bkg']['bkg_dir'])
     # fetch the coupler file first
@@ -24,7 +24,7 @@ def background(config):
         model='gfs_metadata',
         experiment=config['bkg']['bkg_exp'],
         date=bkg_time,
-        step=config['bkg']['forecast_steps'],
+        step=config['bkg']['background_steps'],
         resolution=config['model_resolution'],
         user_date_format='%Y%m%d.%H%M%S',
         fc_date_rendering='analysis',
@@ -39,7 +39,7 @@ def background(config):
         model='gfs',
         experiment=config['bkg']['bkg_exp'],
         date=bkg_time,
-        step=config['bkg']['forecast_steps'],
+        step=config['bkg']['background_steps'],
         resolution=config['model_resolution'],
         user_date_format='%Y%m%d.%H%M%S',
         fc_date_rendering='analysis',

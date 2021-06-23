@@ -1,3 +1,4 @@
+import os
 import platform
 from solo.template import Template, TemplateConstants
 from solo.date import JediDate, DateIncrement, Minute
@@ -43,8 +44,8 @@ class Window:
         self.window_offset = DateIncrement(config.get('window_offset', 'PT3H')) # offset from end of the window to "analysis time"
         self.step_cycle = DateIncrement(config.get('step_cycle', 'PT6H')) # Cadence
         self.window_type = config.get('window_type', '3d') # 3D or 4D windows
-        self.bg_frequency= DateIncrement(config.get('bg_frequency', self.step_cycle)) # Frequency of backgrounds
-        self.bg_step= DateIncrement(config.get('bg_step', self.step_cycle)) # Cadence
+        self.bg_frequency = DateIncrement(config.get('bg_frequency', self.step_cycle)) # Frequency of backgrounds
+        self.bg_step = DateIncrement(config.get('bg_step', self.step_cycle)) # Cadence
         self.info
 
     @property
@@ -73,7 +74,7 @@ class Window:
         return str(JediDate(current_date) - self.bg_step)
 
     def background_steps(self, current_date):
-        if self.window_type.lower() is '3d':
+        if self.window_type.lower() == '3d':
             return [str(self.step_cycle)]
 
         window_begin = Minute(self.window_begin(current_date))

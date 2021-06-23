@@ -4,6 +4,8 @@ import hofx
 import os
 import datetime as dt
 import glob
+from solo.template import TemplateConstants, Template
+from solo.configuration import Configuration
 
 @click.command()
 @click.argument('task', required=True)
@@ -24,17 +26,34 @@ def gen_yaml(task, expdir, yamlout):
     configs = glob.glob(os.path.join(expdir,'*.yaml'))
     # get main configuration dictionary
     config = hofx.configuration.read_yaml(configs, template=template)
+    config.save(target_dir='./', target_name='working.yaml')
     # compute time dependent variables
     cdate = os.getenv('CDATE', 'YYYYMMDDHH')
-    cdate = dt.datetime.strptime(cdate, '%Y%m%d%H')
-    cycle_config = {}
-    cycle_config['current_cycle'] = cdate.strftime('%Y-%m-%dT%H:%M:%SZ')
-    # update config with cycle_config
+    # create a time window object
+    window = hofx.tools.Window(config[task])
+    win_details = window.details(cdate)
+    anl_time = window.analysis_time(cdate)
+    bg_time = window.background_time(cdate)
+    win_details['current_cycle'] = anl_time
+    win_details['background_time'] = bg_time
+    # solo does weird things with certain derived types, forcing to strings
+    win_details['window_length'] = f'{window.window_length}'
+    win_details['window_offset'] = f'{window.window_offset}'
+    win_details['window_type'] = f'{window.window_type}'
+    win_details['step_cycle'] = f'{window.step_cycle}'
+    win_details['bg_frequency'] = f'{window.bg_frequency}'
+    win_details['bg_step'] = f'{window.bg_step}'
     # replace vars in config
+    config.update(win_details)
+    config = hofx.configuration.update_config(config)
+    # clean up output
+    config_temp = Configuration(template)
+    config = hofx.configuration.clean_yaml(config, config_temp)
     # write YAML file out
     target_dir = os.path.dirname(yamlout)
     target_name = os.path.basename(yamlout)
     config.save(target_dir=target_dir, target_name=target_name)
+    return config
 
 if __name__ == '__main__':
-    gen_yaml()
+    _ = gen_yaml()
