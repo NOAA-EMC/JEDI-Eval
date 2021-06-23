@@ -11,8 +11,8 @@ def run_stage(yaml):
     stages files depending on configuration
     takes path to YAML file as input
     """
-    stage_cfg = hofx.tools.init_task_config(yaml, 'stage')
-    print(stage_cfg)
+    config = hofx.configuration.read_yaml(yaml)
+    stage_cfg = config['stage']
     if 'bkg' in stage_cfg:
         hofx.stage.background(stage_cfg)
     if 'obs' in stage_cfg:

@@ -40,19 +40,9 @@ def read_yaml(yamls, template=None, config_in=None):
     config_out = _include_yaml(config_out)
     # do another find/replace now that there are includes
     config_out = replace_vars(config_out)
-    # now nest down through to see if there are more dictionaries
-    for key, value in config_out.items():
-        if isinstance(value, dict):
-            value = Template.substitute_structure(value, TemplateConstants.DOLLAR_PARENTHESES, config_out.get)
-            value = _include_yaml(value)
-            value = replace_vars(value)
-            for key2, value2 in value.items():
-                if isinstance(value2, dict):
-                    value2 = Template.substitute_structure(value2, TemplateConstants.DOLLAR_PARENTHESES, config_out.get)
-                    value2 = _include_yaml(value2)
-                    value2 = replace_vars(value2)
-    # one final find/replace
-    config_out = replace_vars(config_out)
+    # do a couple of recursive updates for good measure
+    config_out = update_config(config_out)
+    config_out = update_config(config_out)
     if template is not None:
         # remove things not in the template for final output
         config_out = clean_yaml(config_out, config_temp)
@@ -81,6 +71,26 @@ def _include_yaml(config):
                 newconfig = Configuration(incpath)
                 config[rootkey] = newconfig
     return config
+
+def _iter_config(config, subconfig):
+    subconfig = Template.substitute_structure(subconfig, TemplateConstants.DOLLAR_PARENTHESES, config.get)
+    subconfig = _include_yaml(subconfig)
+    subconfig = replace_vars(subconfig)
+    for key, value in subconfig.items():
+        if isinstance(value, dict):
+            value = _iter_config(config, value)
+    return subconfig
+
+def update_config(config):
+    # drill through configuration and add includes and replace vars
+    config = replace_vars(config)
+    config = _include_yaml(config)
+    config = replace_vars(config)
+    for key, value in config.items():
+        if isinstance(value, dict):
+            value = _iter_config(config, value)
+    return config
+
 
 def clean_yaml(config_out, config_template):
     # remove top level keys in config_out if they do not appear in config_template

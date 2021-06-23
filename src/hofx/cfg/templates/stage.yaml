@@ -10,7 +10,7 @@ stage:
   experiment_dir: $(experiment_dir)
   model_resolution: $(model_resolution)
   vertical_resolution: $(vertical_resolution)
-  bg_frequency: $(forecast_steps)
+  bg_frequency: $(bg_frequency)
   obs:
     # obs stage
     obs_src: $(obs_src)
@@ -27,7 +27,7 @@ stage:
     fv3jedi_stage: $(fv3jedi_stage)
   bkg:
     # background stage
-    forecast_steps: $(forecast_steps)
+    background_steps: $(background_steps)
     bkg_exp: $(bkg_exp)
     bkg_db: $(bkg_db)
     bkg_dir: $(bkg_dir)
