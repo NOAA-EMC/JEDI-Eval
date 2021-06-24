@@ -1,5 +1,5 @@
 window_length: 'PT6H'
-fcst_length: 'PT6H'
+forecast_length: 'PT6H'
 bundle: /scratch1/NCEPDEV/stmp4/Cory.R.Martin/jedi/bundle
 jedi_build: /scratch1/NCEPDEV/stmp4/Cory.R.Martin/jedi/build
 fv3jedi_stage: $(bundle)/fv3-jedi/ewok/gfs/stage.yaml
