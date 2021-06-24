@@ -32,10 +32,10 @@ alias detect_host=$gitdir/bin/detect_host
 shopt -s expand_aliases
 
 #---- get machine and setup build environment
-set +x
+set +eux
 machine=$(detect_host)
 source $gitdir/cfg/platform/$machine/JEDI
-set -x
+set -eux
 
 #---- source needed shell variables from user YAML
 eval $(source_yaml $USERYAML user account build_dir bundle_dir clean_build clean_bundle update_jedi test_jedi)
