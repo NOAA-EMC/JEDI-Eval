@@ -6,10 +6,20 @@ fv3jedi_stage: $(bundle)/fv3-jedi/ewok/gfs/stage.yaml
 experiment: UFS-test
 experiment_dir: /scratch1/NCEPDEV/stmp4/${USER}/$(experiment)
 stage_dir: $(experiment_dir)/stage
-geom_inc: $(bundle)/fv3-jedi/ewok/gfs/geometry_c768.yaml
+geom_inc: $(bundle)/fv3-jedi/ewok/gfs/geometry.yaml
 state_inc: $(bundle)/fv3-jedi/ewok/gfs/bg.yaml
 model_resolution: c768
 vertical_resolution: 64
+# below should be eventually computed / in a default schema
+layout_x: 2
+layout_y: 2
+io_layout_x: 1
+io_layout_y: 1
+npx_ufs: 769
+npy_ufs: 769
+npz_ufs: $(vertical_resolution)
+ntiles_ufs: 6
+# end what should be computed
 current_dir: $(experiment_dir)/{{current_cycle}}/RESTART
 account: da-cpu
 obs_dir: $(experiment_dir)/{{cycle}}
