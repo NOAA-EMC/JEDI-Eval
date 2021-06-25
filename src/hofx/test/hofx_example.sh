@@ -28,7 +28,7 @@ machine=$(detect_host)
 source $gitdir/cfg/platform/$machine/JEDI
 export R2D2_CONFIG=$gitdir/cfg/platform/$machine/r2d2_config.yaml
 set -eux
-eval $(source_yaml ${USERYAML}/base.yaml account)
+eval $(source_yaml ${USERYAML}/experiment.yaml account)
 
 #---- setup variables based on scheduler
 if [ $scheduler == "slurm" ]; then
@@ -42,12 +42,12 @@ mkdir -p $WORKDIR
 cd $WORKDIR
 
 #---- run genYAML to create YAML file
+export CDATE=2020121500
 $gitdir/bin/genYAML hofx $USERYAML $WORKDIR/hofx.yaml
 
 #---- run executable
-eval $(source_yaml ${USERYAML}/base.yaml jedi_build)
+eval $(source_yaml ${USERYAML}/experiment.yaml jedi_build)
 # NOT finished do manually!
 nprocs=6 # this will be in YAML eventually
-export OOPS_TRACE=1
-${APRUN}${nprocs} -t 30:00 $jedi_build/bin/fv3jedi_hofx_nomodel.x $WORKDIR/hofx.yaml
+${APRUN}${nprocs} --ntasks-per-node=3 -t 30:00 $jedi_build/bin/fv3jedi_hofx_nomodel.x $WORKDIR/hofx.yaml
 
