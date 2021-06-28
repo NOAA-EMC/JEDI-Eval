@@ -30,12 +30,16 @@ def gen_yaml(task, expdir, yamlout):
     # compute time dependent variables
     cdate = os.getenv('CDATE', 'YYYYMMDDHH')
     # create a time window object
-    window = hofx.tools.Window(config[task])
+    if task not in ['hofx']:
+        window = hofx.tools.Window(config[task])
+    else:
+        window = hofx.tools.Window(config)
     win_details = window.details(cdate)
     anl_time = window.analysis_time(cdate)
     bg_time = window.background_time(cdate)
     win_details['current_cycle'] = anl_time
     win_details['background_time'] = bg_time
+    win_details['local_current_cycle'] = dt.datetime.strptime(anl_time, '%Y-%m-%dT%H:%M:%SZ').strftime('%Y%m%d.%H%M%S')
     # solo does weird things with certain derived types, forcing to strings
     win_details['window_length'] = f'{window.window_length}'
     win_details['window_offset'] = f'{window.window_offset}'

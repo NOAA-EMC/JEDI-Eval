@@ -1,0 +1,42 @@
+window_length: 'PT6H'
+forecast_length: 'PT6H'
+bundle: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/bundle
+jedi_build: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/build-20210625
+fv3jedi_stage: $(bundle)/fv3-jedi/ewok/gfs/stage.yaml
+experiment: UFS-test
+experiment_dir: /scratch1/NCEPDEV/stmp4/${USER}/$(experiment)
+stage_dir: $(experiment_dir)/stage
+geom_inc: $(bundle)/fv3-jedi/ewok/gfs/geometry.yaml
+state_inc: $(bundle)/fv3-jedi/ewok/gfs/bg.yaml
+model_resolution: c768
+vertical_resolution: 64
+# below should be eventually computed / in a default schema
+layout_x: 2
+layout_y: 2
+io_layout_x: 1
+io_layout_y: 1
+npx_ufs: 769
+npy_ufs: 769
+npz_ufs: $(vertical_resolution)
+ntiles_ufs: 6
+# end what should be computed
+current_dir: $(experiment_dir)/{{current_cycle}}/RESTART
+account: da-cpu
+obs_dir: $(experiment_dir)/{{cycle}}
+obs_db: ufo_eval_ref
+obs_dump: gdas_f006
+obs_src: ncdiag
+bc_src: gsi
+bc_dump: oper
+bg_frequency: PT1H
+window_type: 3d
+bkg_exp: ufoeval
+bkg_db: ufo_eval_ref
+bkg_dir: $(experiment_dir)/{{cycle}}/RESTART
+bkg_tiles: [1,2,3,4,5,6]
+diag_db: local
+window_offset: PT3H
+step_cycle: PT6H
+obs_list:
+- $<< $(bundle)/ufo/ewok/jedi-gdas/aircraft.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_n19.yaml

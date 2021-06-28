@@ -5,10 +5,12 @@ module load jedi/intel-impi/ecbuild35
 module use /home/rmahajan/opt/modulefiles/stack
 module load hpc/1.1.0
 module load hpc-python/3.7.5
-module load r2d2/1.0.0
+module load hofx/1.0.0
+
+ulimit -s unlimited
 
 make_cmd="make -j8"
 #ecbuild_cmd="ecbuild -DMPIEXEC_EXECUTABLE=/opt/slurm/bin/srun -DMPIEXEC_NUMPROC_FLAG='-n' -DBUILD_PYTHON_BINDINGS=ON -DBUILD_IODA_CONVERTERS=ON"
 ecbuild_cmd="ecbuild -DMPIEXEC_EXECUTABLE=/opt/slurm/bin/srun -DMPIEXEC_NUMPROC_FLAG='-n'"
 scheduler="slurm"
-APRUN="srun -n$nprocs"
+APRUN="srun -n"
