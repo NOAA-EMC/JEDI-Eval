@@ -48,6 +48,6 @@ $gitdir/bin/genYAML hofx $USERYAML $WORKDIR/hofx.yaml
 #---- run executable
 eval $(source_yaml ${USERYAML}/experiment.yaml jedi_build)
 # NOT finished do manually!
-nprocs=6 # this will be in YAML eventually
+nprocs=24 # this will be in YAML eventually
 ${APRUN}${nprocs} --ntasks-per-node=3 -t 30:00 $jedi_build/bin/fv3jedi_hofx_nomodel.x $WORKDIR/hofx.yaml
 

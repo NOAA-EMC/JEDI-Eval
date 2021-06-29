@@ -1,7 +1,7 @@
 window_length: 'PT6H'
 forecast_length: 'PT6H'
 bundle: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/bundle
-jedi_build: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/build-20210625
+jedi_build: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/build-20210629
 fv3jedi_stage: $(bundle)/fv3-jedi/ewok/gfs/stage.yaml
 experiment: UFS-test
 experiment_dir: /scratch1/NCEPDEV/stmp4/${USER}/$(experiment)
