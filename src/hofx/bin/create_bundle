@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from solo.configuration import Configuration
+from solo.yaml_file import YAMLFile
 from hofx.ecbuild import gen_bundle
 import click
 
@@ -10,7 +10,7 @@ def create_bundle(repoyaml, bundledir):
     # read in YAML file containing repositories,
     # and use ecbuild.gen_bundle to write a
     # CMakeLists.txt file in bundle directory
-    config = Configuration(repoyaml)
+    config = YAMLFile(repoyaml)
     gen_bundle(config['repositories'], bundledir, ufs=False)
 
 

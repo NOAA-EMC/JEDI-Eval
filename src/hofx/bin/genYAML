@@ -5,7 +5,7 @@ import os
 import datetime as dt
 import glob
 from solo.template import TemplateConstants, Template
-from solo.configuration import Configuration
+from solo.yaml_file import YAMLFile
 
 @click.command()
 @click.argument('task', required=True)
@@ -51,7 +51,7 @@ def gen_yaml(task, expdir, yamlout):
     config.update(win_details)
     config = hofx.configuration.update_config(config)
     # clean up output
-    config_temp = Configuration(template)
+    config_temp = YAMLFile(template)
     config = hofx.configuration.clean_yaml(config, config_temp)
     # write YAML file out
     target_dir = os.path.dirname(yamlout)

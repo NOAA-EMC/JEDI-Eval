@@ -1,4 +1,4 @@
-from solo.configuration import Configuration
+from solo.yaml_file import YAMLFile
 from solo.template import TemplateConstants, Template
 from hofx.tools import replace_vars
 
@@ -17,19 +17,19 @@ def read_yaml(yamls, template=None, config_in=None):
     """
     if isinstance(yamls, list):
         # read multiple YAML files
-        config = Configuration(yamls[0])
+        config = YAMLFile(yamls[0])
         for yf in yamls[1:]:
-            tmp_config = Configuration(yf)
+            tmp_config = YAMLFile(yf)
             config.update(tmp_config)
     else:
         # read a single file
-        config = Configuration(yamls)
+        config = YAMLFile(yamls)
     if config_in is not None:
         config.update(config_in)
     if template is not None:
         # read in a template YAML file for final config contents
-        config_temp = Configuration(template)
-        config_out = Configuration(template)
+        config_temp = YAMLFile(template)
+        config_out = YAMLFile(template)
         # combine template with previous config
         config_out.update(config)
     else:
@@ -59,7 +59,7 @@ def _include_yaml(config):
             for item in rootval:
                 if incstr in item:
                     incpath = item.replace(incstr, '').strip()
-                    newconfig = Configuration(incpath)
+                    newconfig = YAMLFile(incpath)
                     newlist.append(newconfig)
                 else:
                     newlist.append(item) # keeps something in the list if it is not an include
@@ -68,7 +68,7 @@ def _include_yaml(config):
             # handle single includes
             if incstr in rootval:
                 incpath = rootval.replace(incstr, '').strip()
-                newconfig = Configuration(incpath)
+                newconfig = YAMLFile(incpath)
                 config[rootkey] = newconfig
     return config
 
