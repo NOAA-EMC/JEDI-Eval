@@ -2,6 +2,7 @@ import os
 import platform
 from solo.template import Template, TemplateConstants
 from solo.date import JediDate, DateIncrement, Minute
+from solo.ioda import Ioda
 
 __all__ = ['detect_host', 'process_environment_variables', 'replace_vars', 'Window']
 
@@ -35,6 +36,17 @@ def replace_vars(config):
     config = Template.substitute_with_dependencies(config, TemplateConstants.DOLLAR_PARENTHESES)
     config = Template.substitute_structure(config, TemplateConstants.DOUBLE_CURLY_BRACES, config.get)
     return config
+
+def merge_diags(files, outfile):
+    """
+    merge_diags(files, outfile)
+      for a list of files `files`, concatenate them into one `outfile`
+    """
+    if (len(files)) > 0:
+        ioda = Ioda('diags')
+        ioda.concat_files(files, outfile)
+    else:
+        print('No files to concatenate!')
 
 class Window:
 
