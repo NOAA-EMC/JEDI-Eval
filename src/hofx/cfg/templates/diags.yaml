@@ -1,0 +1,15 @@
+stage:
+  cycle: '{{current_cycle}}'
+  window_length: $(window_length)
+  window_offset: $(window_offset)
+  step_cycle: $(step_cycle)
+  window_type: $(window_type)
+  window begin: '{{window_begin}}'
+  experiment: $(experiment)
+  experiment_dir: $(experiment_dir)
+  diags:
+    obs_dump: $(obs_dump)
+    diag_dir: '{{diag_dir}}'
+    observations: $(obs_list)
+    archive_db: $(diag_db)
+plot:
