@@ -58,12 +58,13 @@ def diags(config):
     input configuration 'config' dictionary
     """
     # create directory
-    mkdir(config['diags']['diag_dir'])
+    directory = config['diags']['diag_dir']
+    mkdir(directory)
     # loop through designated observations
     for ob in config['diags']['observations']:
         obname = ob['obs space']['name'].lower()
         outfile = os.path.basename(ob['obs space']['obsdataout']['obsfile'])
-        outpath = os.path.join(config['diags']['diag_dir'], outfile)
+        outpath = os.path.join(directory, outfile)
         fetch(
             type='diag',
             experiment=config['experiment'],
