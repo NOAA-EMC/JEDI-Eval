@@ -29,7 +29,7 @@ def gen_yaml(task, expdir, yamlout):
     # compute time dependent variables
     cdate = os.getenv('CDATE', 'YYYYMMDDHH')
     # create a time window object
-    if task not in ['hofx']:
+    if task not in ['hofx', 'diags']:
         window = hofx.tools.Window(config[task])
     else:
         window = hofx.tools.Window(config)

@@ -19,6 +19,8 @@ def run_stage(yaml):
         hofx.stage.obs(stage_cfg)
     if 'fv3jedi' in stage_cfg:
         hofx.stage.fv3jedi(stage_cfg)
+    if 'diags' in stage_cfg:
+        hofx.stage.diags(stage_cfg)
 
 
 if __name__ == '__main__':
