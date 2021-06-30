@@ -1,6 +1,6 @@
 #!/bin/bash
 # diags_example.sh
-# example of staging files for hofx
+# example of staging diag files for evaluation
 
 if [ "$#" -ne 2 ]; then
   echo "Usage: $0 /path/to/expdir /path/to/workdir" >&2
