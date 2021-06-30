@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+import click
+import hofx
+import os
+import shutil
+import glob
+
+@click.command()
+@click.argument('yaml', type=click.Path(exists=True))
+def run_merge(yaml):
+    """
+    run_merge(yaml)
+    merges IODA diag files depending on configuration
+    takes path to YAML file as input
+    """
+    config = hofx.configuration.read_yaml(yaml)
+    merge_cfg = config['merge']
+    # loop through list of observations
+    for ob in merge_cfg['obs']['observations']:
+        obname = ob['obs space']['name'].lower()
+        outfile = ob['obs space']['obsdataout']['obsfile']
+        outmatch = os.path.splitext(outfile)[0]+'_????.*'
+        diagfiles = glob.glob(outmatch)
+        print(diagfiles)
+        if len(diagfiles) > 1:
+            hofx.tools.merge_diags(diagfiles, outfile)
+        else:
+            shutil.copy(diagfiles[0], outfile)
+
+
+if __name__ == '__main__':
+    run_merge()

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import click
 import hofx
-import os
 
 @click.command()
 @click.argument('yaml', type=click.Path(exists=True))
