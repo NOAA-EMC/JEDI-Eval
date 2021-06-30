@@ -5,7 +5,7 @@ from solo.logger import Logger
 from solo.stage import Stage
 import os
 
-__all__ = ['background', 'fv3jedi', 'obs']
+__all__ = ['background', 'fv3jedi', 'obs', 'diags']
 
 def background(config):
     """
@@ -50,6 +50,29 @@ def background(config):
         #full_report  = 'yes',
         #report = f"fetch_gfs_{config['cycle']}.yaml",
     )
+
+def diags(config):
+    """
+    diags(config)
+    stage diags based on
+    input configuration 'config' dictionary
+    """
+    # create directory
+    mkdir(config['diags']['diag_dir'])
+    # loop through designated observations
+    for ob in config['diags']['observations']:
+        obname = ob['obs space']['name'].lower()
+        outfile = os.path.basename(ob['obs space']['obsdataout']['obsfile'])
+        outpath = os.path.join(config['diags']['diag_dir'], outfile)
+        fetch(
+            type='diag',
+            experiment=config['experiment'],
+            date=config['window begin'],
+            model='gfs',
+            obs_type=obname.lower(),
+            target_file=outpath,
+            database=config['diags']['archive_db'],
+        )
 
 def obs(config):
     """
