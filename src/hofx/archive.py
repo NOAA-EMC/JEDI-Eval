@@ -12,16 +12,16 @@ def diags(config):
     into a R2D2 database based on an
     input configuration 'config' dictionary
     """
-    for ob in config['observations']:
+    for ob in config['diags']['observations']:
         obname = ob['obs space']['name'].lower()
         # get output file, assumed to be already concatenated
         diagfile = ob['obs space']['obsdataout']['obsfile']
         store(
-            type='diag_gfs',
+            type='diag',
             experiment=config['experiment'],
             date=config['window begin'],
-            model=config['obs_dump'],
+            model='gfs',
             obs_type=obname.lower(),
-            source_file=output,
-            database=config['archive_db'],
+            source_file=diagfile,
+            database=config['diags']['archive_db'],
         )

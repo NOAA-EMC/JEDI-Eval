@@ -11,6 +11,7 @@ archive:
   model_resolution: $(model_resolution)
   diags:
     # obs diags
+    obs_dump: $(obs_dump)
     obs_dir: '{{obs_dir}}'
     observations: $(obs_list)
-    archive_db: $(obs_db)
+    archive_db: $(diag_db)
