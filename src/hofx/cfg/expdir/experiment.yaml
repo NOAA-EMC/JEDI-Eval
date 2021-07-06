@@ -38,6 +38,7 @@ diag_db: local
 diag_dir: $(experiment_dir)/diags
 window_offset: PT3H
 step_cycle: PT6H
+plot_dir: $(experiment_dir)/plots/{{current_cycle}}
 diag_types:
 - histogram_counts
 - histogram_omfdiff

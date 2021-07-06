@@ -20,6 +20,7 @@ plot:
   window_type: $(window_type)
   window begin: '{{window_begin}}'
   experiment: $(experiment)
+  plot_dir: $(plot_dir) 
   diags:
     diag_dir: '{{diag_dir}}'
     observations: $(obs_list)
