@@ -2,7 +2,7 @@ from solo.yaml_file import YAMLFile
 from solo.template import TemplateConstants, Template
 from hofx.tools import replace_vars
 
-__all__ = ['read_yaml', 'clean_yaml']
+__all__ = ['read_yaml', 'clean_yaml', 'clean_obs_yaml']
 
 def read_yaml(yamls, template=None, config_in=None):
     """
@@ -101,3 +101,25 @@ def clean_yaml(config_out, config_template):
     for key in keys_to_del:
         del config_out[key]
     return config_out
+
+def clean_obs_yaml(config):
+    """
+    clean_obs_yaml(config)
+      for an input configuration dictionary, config, remove extra things like
+      obs filters, etc. that make the YAML long that are not needed for
+      diag plotting, analysis, etc.
+    """
+    for key, value in config.items():
+        if isinstance(value, dict):
+            for key2, value2 in value.items():
+                if isinstance(value2, dict):
+                    for key3, value3 in value2.items():
+                        if key3 == 'observations':
+                            for ob in value3:
+                                delkeys = []
+                                for key4, value4 in ob.items():
+                                    if key4 in ['obs bias', 'obs filters']:
+                                       delkeys.append(key4)
+                                for k in delkeys:
+                                    del ob[k]
+    return config

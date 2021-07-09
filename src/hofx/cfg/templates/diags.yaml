@@ -13,3 +13,15 @@ stage:
     observations: $(obs_list)
     archive_db: $(diag_db)
 plot:
+  cycle: '{{current_cycle}}'
+  window_length: $(window_length)
+  window_offset: $(window_offset)
+  step_cycle: $(step_cycle)
+  window_type: $(window_type)
+  window begin: '{{window_begin}}'
+  experiment: $(experiment)
+  plot_dir: $(plot_dir) 
+  diags:
+    diag_dir: '{{diag_dir}}'
+    observations: $(obs_list)
+  types: $(diag_types)

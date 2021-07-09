@@ -39,4 +39,6 @@ $gitdir/bin/genYAML diags $EXPDIR $WORKDIR/diags.yaml
 #---- run stageJEDI based on configuration
 $gitdir/bin/stageJEDI $WORKDIR/diags.yaml
 
-#---- run plotting/analysis software TBD
+#---- make figures from just this cycle
+$gitdir/bin/plotDiags $WORKDIR/diags.yaml
+

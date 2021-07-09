@@ -52,6 +52,9 @@ def gen_yaml(task, expdir, yamlout):
     # clean up output
     config_temp = YAMLFile(template)
     config = hofx.configuration.clean_yaml(config, config_temp)
+    # remove extra observation things if this is 'diags'
+    if task in ['diags']:
+        config = hofx.configuration.clean_obs_yaml(config)
     # write YAML file out
     config.save(yamlout)
     return config
