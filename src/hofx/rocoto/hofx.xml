@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<!DOCTYPE workflow
+[
+	<!--
+	PROGRAM
+		Main workflow manager for cycling hofx
+
+	AUTHOR:
+
+	NOTES:
+		This workflow was automatically generated at 
+	-->
+
+	<!-- Experiment parameters such as name, starting, ending dates -->
+	<!ENTITY PSLOT "prhfox">
+	<!ENTITY SDATE "202012150000">
+	<!ENTITY EDATE "202012160000">
+
+	<!-- Run Envrionment -->
+	<!ENTITY RUN_ENVIR "rocoto">
+
+	<!-- Experiment and Rotation directory -->
+	<!ENTITY EXPDIR "/work/noaa/da/rtreadon/para_gfs/prhofx">
+	<!ENTITY ROTDIR "/work/noaa/stmp/rtreadon/rocoto/prhofx/gfs/prod">
+
+        <!-- HOFX directory -->
+        <!ENTITY HOFX_HOMEDIR "/work/noaa/da/rtreadon/git/hofxcs/feature/rocoto/src">
+
+	<!-- Machine related entities -->
+	<!ENTITY ACCOUNT    "da-cpu">
+	<!ENTITY QUEUE      "batch">
+	<!ENTITY QUEUE_SERVICE "service">
+	<!ENTITY PARTITION_BATCH "orion">
+	<!ENTITY PARTITION_SERVICE "service">
+	<!ENTITY SCHEDULER  "slurm">
+        <!ENTITY machine "orion">
+
+	<!-- ROCOTO parameters that control workflow -->
+	<!ENTITY CYCLETHROTTLE "3">
+	<!ENTITY TASKTHROTTLE  "5">
+	<!ENTITY MAXTRIES      "2">
+
+	<!ENTITY QUEUE_STAGE_GDAS     "&QUEUE;">
+	<!ENTITY PARTITION_STAGE_GDAS "&PARTITION_BATCH;">
+	<!ENTITY WALLTIME_STAGE_GDAS  "00:15:00">
+	<!ENTITY RESOURCES_STAGE_GDAS "<nodes>1:ppn=1:tpp=1</nodes>">
+	<!ENTITY NATIVE_STAGE_GDAS    "--export=NONE">
+
+	<!ENTITY QUEUE_HOFX_GDAS     "&QUEUE;">
+	<!ENTITY PARTITION_HOFX_GDAS "&PARTITION_BATCH;">
+	<!ENTITY WALLTIME_HOFX_GDAS  "00:30:00">
+	<!ENTITY RESOURCES_HOFX_GDAS "<nodes>8:ppn=3:tpp=1</nodes>">
+	<!ENTITY NATIVE_HOFX_GDAS    "--export=NONE">
+
+	<!ENTITY QUEUE_MERGE_GDAS     "&QUEUE;">
+	<!ENTITY PARTITION_MERGE_GDAS "&PARTITION_BATCH;">
+	<!ENTITY WALLTIME_MERGE_GDAS  "00:15:00">
+	<!ENTITY RESOURCES_MERGE_GDAS "<nodes>1:ppn=1:tpp=1</nodes>">
+	<!ENTITY NATIVE_MERGE_GDAS    "--export=NONE">
+
+	<!ENTITY QUEUE_ARCHIVE_GDAS     "&QUEUE;">
+	<!ENTITY PARTITION_ARCHIVE_GDAS "&PARTITION_BATCH;">
+	<!ENTITY WALLTIME_ARCHIVE_GDAS  "00:15:00">
+	<!ENTITY RESOURCES_ARCHIVE_GDAS "<nodes>1:ppn=1:tpp=1</nodes>">
+	<!ENTITY NATIVE_ARCHIVE_GDAS    "--export=NONE">
+
+]>
+
+<workflow realtime="F" scheduler="&SCHEDULER;" cyclethrottle="&CYCLETHROTTLE;" taskthrottle="&TASKTHROTTLE;">
+
+	<log verbosity="10"><cyclestr>&EXPDIR;/logs/@Y@m@d@H.log</cyclestr></log>
+
+	<!-- Define the cycles -->
+	<cycledef group="gdas" >&SDATE;     &EDATE;     06:00:00</cycledef>
+
+<task name="gdas_stage" cycledefs="gdas" maxtries="&MAXTRIES;">
+
+	<command>&HOFX_HOMEDIR;/hofx/rocoto/gdas_stage.sh</command>
+
+	<jobname><cyclestr>&PSLOT;_gdas_stage_@H</cyclestr></jobname>
+	<account>&ACCOUNT;</account>
+	<queue>&QUEUE_STAGE_GDAS;</queue>
+	<partition>&PARTITION_BATCH;</partition>
+	&RESOURCES_STAGE_GDAS;
+	<walltime>&WALLTIME_STAGE_GDAS;</walltime>
+	
+	<native>&NATIVE_STAGE_GDAS;</native>
+
+	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_stage.log</cyclestr></join>
+
+	<envar><name>SLURM_SET</name><value>YES</value></envar>
+	<envar><name>RUN_ENVIR</name><value>&RUN_ENVIR;</value></envar>
+        <envar><name>machine</name><value>&machine;</value></envar>
+        <envar><name>HOFX_HOMEDIR</name><value>&HOFX_HOMEDIR;</value></envar>
+        <envar><name>PYTHONPATH</name><value>&HOFX_HOMEDIR;</value></envar>
+        <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
+	<envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+	<envar><name>CDUMP</name><value>gdas</value></envar>
+	<envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+	<envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+
+	<dependency>
+		<and>
+                        <taskdep task="gdas_archive" cycle_offset="-06:00:00"/>
+		</and>
+	</dependency>
+
+</task>
+
+<task name="gdas_hofx" cycledefs="gdas" maxtries="&MAXTRIES;">
+
+	<command>&HOFX_HOMEDIR;/hofx/rocoto/gdas_hofx.sh</command>
+
+	<jobname><cyclestr>&PSLOT;_gdas_hofx_@H</cyclestr></jobname>
+	<account>&ACCOUNT;</account>
+	<queue>&QUEUE_HOFX_GDAS;</queue>
+	<partition>&PARTITION_BATCH;</partition>
+	&RESOURCES_HOFX_GDAS;
+	<walltime>&WALLTIME_HOFX_GDAS;</walltime>
+	
+	<native>&NATIVE_HOFX_GDAS;</native>
+
+	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_hofx.log</cyclestr></join>
+
+	<envar><name>SLURM_SET</name><value>YES</value></envar>
+	<envar><name>RUN_ENVIR</name><value>&RUN_ENVIR;</value></envar>
+        <envar><name>machine</name><value>&machine;</value></envar>
+        <envar><name>HOFX_HOMEDIR</name><value>&HOFX_HOMEDIR;</value></envar>
+        <envar><name>PYTHONPATH</name><value>&HOFX_HOMEDIR;</value></envar>
+        <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
+	<envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+	<envar><name>CDUMP</name><value>gdas</value></envar>
+	<envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+	<envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+
+
+	<dependency>
+		<and>
+			<taskdep task="gdas_stage"/>
+		</and>
+	</dependency>
+
+</task>
+
+<task name="gdas_merge" cycledefs="gdas" maxtries="&MAXTRIES;">
+
+	<command>&HOFX_HOMEDIR;/hofx/rocoto/gdas_merge.sh</command>
+
+	<jobname><cyclestr>&PSLOT;_gdas_merge_@H</cyclestr></jobname>
+	<account>&ACCOUNT;</account>
+	<queue>&QUEUE_MERGE_GDAS;</queue>
+	<partition>&PARTITION_BATCH;</partition>
+	&RESOURCES_MERGE_GDAS;
+	<walltime>&WALLTIME_MERGE_GDAS;</walltime>
+	
+	<native>&NATIVE_MERGE_GDAS;</native>
+
+	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_merge.log</cyclestr></join>
+
+	<envar><name>SLURM_SET</name><value>YES</value></envar>
+	<envar><name>RUN_ENVIR</name><value>&RUN_ENVIR;</value></envar>
+        <envar><name>machine</name><value>&machine;</value></envar>
+        <envar><name>HOFX_HOMEDIR</name><value>&HOFX_HOMEDIR;</value></envar>
+        <envar><name>PYTHONPATH</name><value>&HOFX_HOMEDIR;</value></envar>
+        <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
+	<envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+	<envar><name>CDUMP</name><value>gdas</value></envar>
+	<envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+	<envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+
+	<dependency>
+		<and>
+			<taskdep task="gdas_hofx"/>
+		</and>
+	</dependency>
+
+</task>
+
+<task name="gdas_archive" cycledefs="gdas" maxtries="&MAXTRIES;">
+
+	<command>&HOFX_HOMEDIR;/hofx/rocoto/gdas_archive.sh</command>
+
+	<jobname><cyclestr>&PSLOT;_gdas_archive_@H</cyclestr></jobname>
+	<account>&ACCOUNT;</account>
+	<queue>&QUEUE_ARCHIVE_GDAS;</queue>
+	<partition>&PARTITION_BATCH;</partition>
+	&RESOURCES_ARCHIVE_GDAS;
+	<walltime>&WALLTIME_ARCHIVE_GDAS;</walltime>
+	
+	<native>&NATIVE_ARCHIVE_GDAS;</native>
+
+	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_archive.log</cyclestr></join>
+
+	<envar><name>SLURM_SET</name><value>YES</value></envar>
+	<envar><name>RUN_ENVIR</name><value>&RUN_ENVIR;</value></envar>
+        <envar><name>machine</name><value>&machine;</value></envar>
+        <envar><name>HOFX_HOMEDIR</name><value>&HOFX_HOMEDIR;</value></envar>
+        <envar><name>PYTHONPATH</name><value>&HOFX_HOMEDIR;</value></envar>
+        <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
+	<envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+	<envar><name>CDUMP</name><value>gdas</value></envar>
+	<envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+	<envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+
+	<dependency>
+		<and>
+			<taskdep task="gdas_merge"/>
+		</and>
+	</dependency>
+
+</task>
+
+</workflow>
