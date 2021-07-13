@@ -100,9 +100,10 @@
 	<envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
 
 	<dependency>
-		<and>
+		<or>
                         <taskdep task="gdas_archive" cycle_offset="-06:00:00"/>
-		</and>
+                        <not><cycleexistdep cycle_offset="-06:00:00"/></not>
+		</or>
 	</dependency>
 
 </task>
