@@ -6,6 +6,7 @@ import ioda
 
 from hofx.diag import diagnostics
 
+
 def append_dict(dic, data, variable, inputchans=None, chanCoords=None):
     """
     Create dictionary from existing dictionary.
@@ -74,11 +75,7 @@ def get_input_channels(channels):
 
     return inputchans
     
- query_plot_type(df, variable, plotType, channel=None):
-    
-    
-    i
-t_df(obsspace, variable, plotType, inputchans=None):
+def gen_plot_df(obsspace, variable, plotType, inputchans=None):
     
     d = {'hofxdiff': ['hofx', 'GsiHofXBc'],
          'gsiomf': ['ObsValue', 'GsiHofXBc'],
@@ -118,9 +115,10 @@ t_df(obsspace, variable, plotType, inputchans=None):
     # Create dataframe
     df = pd.DataFrame(plot_dict)
 
-    return df
+    return df 
 
-def query_plot_type(df, variabel, plotType, channel=None): 
+def query_plot_type(df, variable, plotType, channel=None):
+    
     
     if plotType.endswith('hofxdiff'):
         plotvar = 'hofxdiff'
@@ -173,6 +171,7 @@ def genDiagnostics(file, variable, plotType, channels=None):
     
     df = gen_plot_df(obsspace, variable, plotType, inputchans)
     
+    
     metadata = {'title': 'title',
                 'cycle': 'cycle',
                 'cmap': 'viridis',
@@ -206,13 +205,13 @@ def genDiagnostics(file, variable, plotType, channels=None):
                 df, plotvar = query_plot_type(df, variable, plotType, channel=channel)
                 
                 binned_df = diagnostics.bin_df(df, variable=f'{plotvar}/{variable}_{channel}', dlat=5, dlon=5)
-                fig = diagnostics.spatial_binned(binned_df, metadata, variable=f'{plotvar}/{variable}_{channel}')
+                fig = diagnostics.spatial_binned(binned_df, metadata)
                 
         else:
             df, plotvar = query_plot_type(df, variable, plotType)
 
             binned_df = diagnostics.bin_df(df, variable=f'{plotvar}/{variable}', dlat=5, dlon=5)
-            fig = diagnostics.spatial_binned(binned_df, metadata, variable=f'{plotvar}/{variable}')
+            fig = diagnostics.spatial_binned(binned_df, metadata)
         
         # Save figure
         fig.savefig(metadata['outfig'], bbox_inches='tight', pad_inches=0.1)
@@ -245,5 +244,6 @@ def genDiagnostics(file, variable, plotType, channels=None):
         
         # Save figure    
         fig.savefig(metadata['outfig'], bbox_inches='tight', pad_inches=0.1)
+    
     
     return
