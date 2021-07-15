@@ -25,7 +25,12 @@ def run_plot(yaml):
         # grab variables from the ob['obs space'] dict
         # and call hofx.diag functions to make figures
         print(ob['obs space'])
-
+        # get list of variables
+        var_list = ob['obs space']['simulated variables']
+        for var in var_list:
+            for plot in plot_types:
+                diag.plotIODA(ob, var, plot, plot_dir)
+        
 
 if __name__ == '__main__':
     run_plot()
