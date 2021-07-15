@@ -127,7 +127,8 @@ def spatial(df, metadata, variable=None):
     
     if variable is not None:
         cs = plt.scatter(df['longitude'], df['latitude'], c=df[variable], s=10,
-                    cmap=metadata['cmap'], transform=ccrs.PlateCarree())
+                         vmin=metadata['vmin'], vmax=metadata['vmax'],
+                        cmap=metadata['cmap'], transform=ccrs.PlateCarree())
         cb = plt.colorbar(cs, shrink=0.5, pad=.03, extend='both')
         cb.set_label(metadata['label'])
         
