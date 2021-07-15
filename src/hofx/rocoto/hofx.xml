@@ -8,32 +8,34 @@
 	AUTHOR:
 
 	NOTES:
-		This workflow was automatically generated at 
+		Users should first configure experiments.yaml 
+                and then execute workflow.py to generate a
+                usable xml from this xml template
 	-->
 
 	<!-- Experiment parameters such as name, starting, ending dates -->
-	<!ENTITY PSLOT "prhfox">
-	<!ENTITY SDATE "202012150000">
-	<!ENTITY EDATE "202012160000">
+	<!ENTITY PSLOT "expname">
+	<!ENTITY SDATE "begdate">
+	<!ENTITY EDATE "enddate">
 
 	<!-- Run Envrionment -->
 	<!ENTITY RUN_ENVIR "rocoto">
 
-	<!-- Experiment and Rotation directory -->
-	<!ENTITY EXPDIR "/work/noaa/da/rtreadon/para_gfs/prhofx">
-	<!ENTITY ROTDIR "/work/noaa/stmp/rtreadon/rocoto/prhofx/gfs/prod">
+	<!-- Work directory -->
+        <!ENTITY WRKDIR "wrkdir">
+	<!ENTITY ROTDIR "&WRKDIR;/&PSLOT;">
 
         <!-- HOFX directory -->
-        <!ENTITY HOFX_HOMEDIR "/work/noaa/da/rtreadon/git/hofxcs/feature/rocoto/src">
+        <!ENTITY HOFX_HOMEDIR "hofx_homedir">
 
 	<!-- Machine related entities -->
 	<!ENTITY ACCOUNT    "da-cpu">
 	<!ENTITY QUEUE      "batch">
 	<!ENTITY QUEUE_SERVICE "service">
-	<!ENTITY PARTITION_BATCH "orion">
+	<!ENTITY PARTITION_BATCH "platform">
 	<!ENTITY PARTITION_SERVICE "service">
 	<!ENTITY SCHEDULER  "slurm">
-        <!ENTITY machine "orion">
+        <!ENTITY machine "platform">
 
 	<!-- ROCOTO parameters that control workflow -->
 	<!ENTITY CYCLETHROTTLE "3">
@@ -68,7 +70,7 @@
 
 <workflow realtime="F" scheduler="&SCHEDULER;" cyclethrottle="&CYCLETHROTTLE;" taskthrottle="&TASKTHROTTLE;">
 
-	<log verbosity="10"><cyclestr>&EXPDIR;/logs/@Y@m@d@H.log</cyclestr></log>
+	<log verbosity="10"><cyclestr>&ROTDIR;/logs/@Y@m@d@H/rocoto.log</cyclestr></log>
 
 	<!-- Define the cycles -->
 	<cycledef group="gdas" >&SDATE;     &EDATE;     06:00:00</cycledef>
