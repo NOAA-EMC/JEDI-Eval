@@ -3,14 +3,14 @@
 [
 	<!--
 	PROGRAM
-		Main workflow manager for cycling hofx
+		Workflow xml for cycling hofx
 
 	AUTHOR:
 
 	NOTES:
-		Users should first configure experiments.yaml 
-                and then execute workflow.py to generate a
-                usable xml from this xml template
+		Users need to first configure ../cfg/expdir/experiments.yaml 
+                and then execute setup_workflow.py to generate a user
+                specific xml from this xml template
 	-->
 
 	<!-- Experiment parameters such as name, starting, ending dates -->
@@ -91,6 +91,7 @@
 	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_stage.log</cyclestr></join>
 
 	<envar><name>SLURM_SET</name><value>YES</value></envar>
+        <envar><name>RUN_ENVIR</name><value>&RUN_ENVIR;</value></envar>
         <envar><name>machine</name><value>&machine;</value></envar>
         <envar><name>HOFX_HOMEDIR</name><value>&HOFX_HOMEDIR;</value></envar>
         <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
@@ -121,6 +122,7 @@
 	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_hofx.log</cyclestr></join>
 
 	<envar><name>SLURM_SET</name><value>YES</value></envar>
+        <envar><name>RUN_ENVIR</name><value>&RUN_ENVIR;</value></envar>
         <envar><name>machine</name><value>&machine;</value></envar>
         <envar><name>HOFX_HOMEDIR</name><value>&HOFX_HOMEDIR;</value></envar>
         <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
@@ -150,6 +152,7 @@
 	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_merge.log</cyclestr></join>
 
 	<envar><name>SLURM_SET</name><value>YES</value></envar>
+        <envar><name>RUN_ENVIR</name><value>&RUN_ENVIR;</value></envar>
         <envar><name>machine</name><value>&machine;</value></envar>
         <envar><name>HOFX_HOMEDIR</name><value>&HOFX_HOMEDIR;</value></envar>
         <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
@@ -179,6 +182,7 @@
 	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_archive.log</cyclestr></join>
 
 	<envar><name>SLURM_SET</name><value>YES</value></envar>
+        <envar><name>RUN_ENVIR</name><value>&RUN_ENVIR;</value></envar>
         <envar><name>machine</name><value>&machine;</value></envar>
         <envar><name>HOFX_HOMEDIR</name><value>&HOFX_HOMEDIR;</value></envar>
         <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
