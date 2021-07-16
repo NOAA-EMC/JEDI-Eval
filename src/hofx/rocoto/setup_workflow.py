@@ -52,13 +52,6 @@ wrkdir=" "
 str1 = " "
 wrkdir=str1.join(res)
 
-##search_key='platform'
-##res = [val for key, val in parsed_expyml.items() if search_key in key]
-##platform=" "
-##str1 = " "
-##platform=str1.join(res)
-
-
 replacements = {
     'expname': expname,
     'begdate': begdate,
@@ -69,11 +62,15 @@ replacements = {
 }
 
 
+print(' ')
+print("Extract following settings")
 for src, target in replacements.items():
    print(src, target)
 
+
 expxml=expname + '.xml'
-print(expxml)
+print(' ')
+print('Create xml: {}'.format(expxml))
 
 with open("hofx.xml", 'r') as xmlin:
   with open(expxml, 'w') as xmlout:

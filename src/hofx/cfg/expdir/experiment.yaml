@@ -1,15 +1,28 @@
+# User settings
+#  expname:  name of experiment
+#  begdate:  start date
+#  enddate:  end date
+#  hofx_homedir:  path to src directory of hofxcs clone
+#  wrkdir:  directory to which ouput files are written
 expname: 'prhofx'
 begdate: '2020121500'
 enddate: '2020121600'
-hofx_homedir: '/scratch1/NCEPDEV/da/Russ.Treadon/git/hofxcs/feature/rocoto/src'
-wrkdir: '/scratch1/NCEPDEV/stmp4/Russ.Treadon'
+hofx_homedir: '/work/noaa/da/Russ.Treadon/git/hofxcs/feature_rocoto/src'
+wrkdir: '/work/noaa/stmp/rtreadon/rocoto'
+#
+# Set bundle and jedi_bundle dpending on machine
+##bundle: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/bundle
+##jedi_build: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/build-20210629
+bundle: /work/noaa/da/cmartin/JEDI/testing/intel/bundle
+jedi_build: /work/noaa/da/cmartin/JEDI/testing/intel/build-20210629
+#
+# End of user settings
+#
 window_length: 'PT6H'
 forecast_length: 'PT6H'
-bundle: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/bundle
-jedi_build: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/build-20210629
 fv3jedi_stage: $(bundle)/fv3-jedi/ewok/gfs/stage.yaml
 experiment: $(expname)
-experiment_dir: ${wrkdir}/$(experiment)
+experiment_dir: $(wrkdir)/$(experiment)
 stage_dir: $(experiment_dir)/stage
 geom_inc: $(bundle)/fv3-jedi/ewok/gfs/geometry.yaml
 state_inc: $(bundle)/fv3-jedi/ewok/gfs/bg.yaml
