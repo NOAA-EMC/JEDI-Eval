@@ -3,7 +3,7 @@
 #  begdate:  start date
 #  enddate:  end date
 #  hofx_homedir:  path to src directory of hofxcs clone
-#  wrkdir:  directory to which ouput files are written
+#  wrkdir:  directory to which output files are written
 expname: 'prhofx'
 begdate: '2020121500'
 enddate: '2020121600'
