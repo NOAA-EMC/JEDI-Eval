@@ -78,6 +78,7 @@ def get_input_channels(channels):
 def gen_plot_df(obsspace, variable, plotType, inputchans=None):
     
     d = {'hofxdiff': ['hofx', 'GsiHofXBc'],
+         'hofx': ['hofx', 'GsiHofXBc'],
          'gsiomf': ['ObsValue', 'GsiHofXBc'],
          'ufoomf': ['ObsValue', 'hofx'],
          'ufocounts': ['hofx'],
@@ -117,7 +118,7 @@ def gen_plot_df(obsspace, variable, plotType, inputchans=None):
 
     return df 
 
-def query_plot_type(df, variable, plotType, channel=None):
+def query_plot_type(df, variable, plotType, metadata, channel=None):
     
     
     if plotType.endswith('hofxdiff'):
@@ -126,6 +127,14 @@ def query_plot_type(df, variable, plotType, channel=None):
             df[f'hofxdiff/{variable}_{channel}'] = df[f'GsiHofXBc/{variable}_{channel}'] - df[f'hofx/{variable}_{channel}']
         else:
             df[f'hofxdiff/{variable}'] = df[f'GsiHofXBc/{variable}'] - df[f'hofx/{variable}']
+            
+        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - GSI-UFO"
+        metadata['cmap'] = 'coolwarm'
+        metadata['vmin'] = -15
+        metadata['vmax'] = 15
+        metadata['label'] = 'GSI-UFO'
+        metadata['xlabel'] = 'GSI'
+        metadata['ylabel'] = 'UFO'
 
     elif plotType.endswith('gsiomf'):
         plotvar = 'omf'
@@ -133,6 +142,14 @@ def query_plot_type(df, variable, plotType, channel=None):
             df[f'omf/{variable}_{channel}'] = df[f'ObsValue/{variable}_{channel}'] - df[f'GsiHofXBc/{variable}_{channel}']
         else:
             df[f'omf/{variable}'] = df[f'ObsValue/{variable}'] - df[f'GsiHofXBc/{variable}']
+            
+        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - Obs-GSI"
+        metadata['cmap'] = 'coolwarm'
+        metadata['vmin'] = -15
+        metadata['vmax'] = 15
+        metadata['label'] = 'Obs-GSI'
+        metadata['xlabel'] = 'Obs'
+        metadata['ylabel'] = 'GSI'
 
     elif plotType.endswith('ufoomf'):
         plotvar = 'omf'
@@ -140,28 +157,98 @@ def query_plot_type(df, variable, plotType, channel=None):
             df[f'omf/{variable}_{channel}'] = df[f'ObsValue/{variable}_{channel}'] - df[f'hofx/{variable}_{channel}']
         else:
             df[f'omf/{variable}'] = df[f'ObsValue/{variable}'] - df[f'hofx/{variable}']
+            
+        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - Obs-UFO"
+        metadata['cmap'] = 'coolwarm'
+        metadata['vmin'] = -15
+        metadata['vmax'] = 15
+        metadata['label'] = 'Obs-UFO'
+        metadata['xlabel'] = 'Obs'
+        metadata['ylabel'] = 'UFO'
 
     elif plotType.endswith('gsi'):
         plotvar = 'GsiHofXBc'
         
+        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - GSI"
+        metadata['cmap'] = 'viridis'
+        metadata['vmin'] = None
+        metadata['vmax'] = None
+        metadata['label'] = 'GSI'
+        metadata['xlabel'] = 'GSI'
+        metadata['ylabel'] = None
+        
     elif plotType.endswith('ufo'):
         plotvar = 'hofx'
+        
+        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - UFO"
+        metadata['cmap'] = 'viridis'
+        metadata['vmin'] = None
+        metadata['vmax'] = None
+        metadata['label'] = 'UFO'
+        metadata['xlabel'] = 'UFO'
+        metadata['ylabel'] = None
     
     elif plotType.endswith('obs'):
         plotvar = 'ObsValue'
         
+        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - Observations"
+        metadata['cmap'] = 'viridis'
+        metadata['vmin'] = None
+        metadata['vmax'] = None
+        metadata['label'] = 'Observations'
+        metadata['xlabel'] = 'Observations'
+        metadata['ylabel'] = None
+        
     elif plotType.endswith('hofx'):
         plotvar = ['GsiHofXBc', 'hofx']
+        
+        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - GSI-UFO"
+        metadata['cmap'] = 'coolwarm'
+        metadata['vmin'] = None
+        metadata['vmax'] = None
+        metadata['label'] = 'GSI-UFO'
+        metadata['xlabel'] = 'GSI'
+        metadata['ylabel'] = 'UFO'
         
     else:
         raise TypeError(f'Plot variable {plotType} is not recognized. Please enter valid plot variable.')
         
-    return df, plotvar
+    return df, plotvar, metadata
 
-
-def genDiagnostics(file, variable, plotType, channels=None):
+def parse_ob_dict(ob_dict):
     
-    obsspace = ioda.ObsSpace(file)
+    obsspace = ob_dict['obs space']
+    obsname = obsspace['name']
+    obsfile = obsspace['obsdataout']['obsfile']
+    cycle = obsfile.split('/')[-1].split('.')[-2]
+    
+    if 'channels' in obsspace:
+        channels = obsspace['channels']
+    else:
+        channels = None
+    
+    metadata = {'obs file': obsfile,
+                'obs name': obsname,
+                'channels': channels,
+                'cycle': cycle}
+    
+    return metadata
+
+
+def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
+    """
+    Input:
+        ob_dict: dictionary containing info on obs file
+        variable: variable from ob to create diagnostic
+        plotType: str of the type of plot requested
+        plot_dir: outdir where the plot should be saved to
+    """
+    
+    metadata = parse_ob_dict(ob_dict)
+    channels = metadata['channels']
+    metadata['outfig'] = plot_dir
+    
+    obsspace = ioda.ObsSpace(metadata['obs file'])
     
     if channels:
         inputchans = get_input_channels(channels)
@@ -171,79 +258,92 @@ def genDiagnostics(file, variable, plotType, channels=None):
     
     df = gen_plot_df(obsspace, variable, plotType, inputchans)
     
-    
-    metadata = {'title': 'title',
-                'cycle': 'cycle',
-                'cmap': 'viridis',
-                'vmax': None,
-                'vmin': None,
-                'label': 'label',
-                'outfig': f'sample_figure.png'}
-    
 
     if plotType.startswith('spatial'):
         if channels:
             for channel in inputchans:
                 
-                df, plotvar = query_plot_type(df, variable, plotType, channel=channel)
+                df, plotvar, metadata = query_plot_type(df, variable, plotType, metadata, channel=channel)
                 
                 fig = diagnostics.spatial(df, metadata, variable=f'{plotvar}/{variable}_{channel}')
+                # Save figure    
+                fig.savefig(f"{metadata['outfig']}/spatial_{metadata['obs name']}_{metadata['cycle']}_{channel}.png",
+                            bbox_inches='tight', pad_inches=0.1)
                 
         else:                
-            df, plotvar = query_plot_type(df, variable, plotType)
+            df, plotvar, metadata = query_plot_type(df, variable, plotType, metadata)
 
             fig = diagnostics.spatial(df, metadata, variable=f'{plotvar}/{variable}')
         
-        # Save figure
-        fig.savefig(metadata['outfig'], bbox_inches='tight', pad_inches=0.1)
+            # Save figure    
+            fig.savefig(f"{metadata['outfig']}/spatial_{metadata['obs name']}_{metadata['cycle']}.png",
+                        bbox_inches='tight', pad_inches=0.1)
             
     
     if plotType.startswith('binned_spatial'):
         if channels:
             for channel in inputchans:
                 
-                df, plotvar = query_plot_type(df, variable, plotType, channel=channel)
+                df, plotvar, metadata = query_plot_type(df, variable, plotType, metadata, channel=channel)
                 
                 binned_df = diagnostics.bin_df(df, variable=f'{plotvar}/{variable}_{channel}', dlat=5, dlon=5)
                 fig = diagnostics.spatial_binned(binned_df, metadata)
                 
+                # Save figure    
+                fig.savefig(f"{metadata['outfig']}/binned_spatial_{metadata['obs name']}_{metadata['cycle']}_{channel}.png",
+                            bbox_inches='tight', pad_inches=0.1)
+                
         else:
-            df, plotvar = query_plot_type(df, variable, plotType)
+            df, plotvar, metadata = query_plot_type(df, variable, plotType, metadata)
 
             binned_df = diagnostics.bin_df(df, variable=f'{plotvar}/{variable}', dlat=5, dlon=5)
             fig = diagnostics.spatial_binned(binned_df, metadata)
         
-        # Save figure
-        fig.savefig(metadata['outfig'], bbox_inches='tight', pad_inches=0.1)
+            # Save figure    
+            fig.savefig(f"{metadata['outfig']}/binned_spatial_{metadata['obs name']}_{metadata['cycle']}.png",
+                        bbox_inches='tight', pad_inches=0.1)
         
     
     if plotType.startswith('scatter_hofx'):
         if channels:
             for channel in inputchans:   
-                df, plotvar = query_plot_type(df, variable, plotType, channel=channel)
+                df, plotvar, metadata = query_plot_type(df, variable, plotType, metadata, channel=channel)
                 fig = diagnostics.scatter(df[f"{plotvar[0]}/{variable}_{channel}"], df[f"{plotvar[1]}/{variable}_{channel}"], metadata)
+                # Save figure    
+                fig.savefig(f"{metadata['outfig']}/scatter_{metadata['obs name']}_{metadata['cycle']}_{channel}.png",
+                            bbox_inches='tight', pad_inches=0.1)
         else:
-            df, plotvar = query_plot_type(df, variable, plotType)
+            df, plotvar, metadata = query_plot_type(df, variable, plotType, metadata)
             fig = diagnostics.scatter(df[f"{plotvar[0]}/{variable}"], df[f"{plotvar[1]}/{variable}"], metadata)
             
-        # Save figure    
-        fig.savefig(metadata['outfig'], bbox_inches='tight', pad_inches=0.1)
+            # Save figure    
+            fig.savefig(f"{metadata['outfig']}/scatter_{metadata['obs name']}_{metadata['cycle']}.png",
+                        bbox_inches='tight', pad_inches=0.1)
             
     if plotType.startswith('lineplot'):
+        
+        metadata['linestlye'] = '-'
+        metadata['linewidth'] = '1'
+        metadata['color'] = 'red'
+        
         if channels:
             for channel in inputchans:
-                df, plotvar = query_plot_type(df, variable, plotType, channel=channel)
+                df, plotvar, metadata = query_plot_type(df, variable, plotType, metadata, channel=channel)
                 fig = diagnostics.scatter(df[f"{plotvar[1]}/{variable}_{channel}"].index,
                                           df[f"{plotvar[0]}/{variable}_{channel}"]-df[f"{plotvar[1]}/{variable}_{channel}"],
                                           metadata)
+                # Save figure    
+                fig.savefig(f"{metadata['outfig']}/lineplot_{metadata['obs name']}_{metadata['cycle']}_{channel}.png",
+                            bbox_inches='tight', pad_inches=0.1)
         else:
-            df, plotvar = query_plot_type(df, variable, plotType)
+            df, plotvar, metadata = query_plot_type(df, variable, plotType, metadata)
             fig = diagnostics.scatter(df[f"{plotvar[1]}/{variable}"].index,
                                       df[f"{plotvar[0]}/{variable}"]-df[f"{plotvar[1]}/{variable}"],
                                       metadata)
         
-        # Save figure    
-        fig.savefig(metadata['outfig'], bbox_inches='tight', pad_inches=0.1)
+            # Save figure    
+            fig.savefig(f"{metadata['outfig']}/lineplot_{metadata['obs name']}_{metadata['cycle']}.png",
+                        bbox_inches='tight', pad_inches=0.1)
     
     
     return
