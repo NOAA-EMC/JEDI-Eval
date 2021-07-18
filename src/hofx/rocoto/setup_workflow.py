@@ -6,9 +6,8 @@ import hofx
 import click
 
 @click.command()
-@click.option('--expxmldir', default='.', help='directory to which xml file is written (default ./)')
-@click.argument('expxmldir', default='.', type=click.Path(exists=True))
-def setup_workflow(expxmldir):
+@click.option('-e', '--expyaml', 'expyaml', required=True, help='path/file containing experiment yaml')
+def setup_workflow(expyaml):
     """
     read in YAML file containing user experiment settings and
     create a rocoto xml file to cycle through specified dates.
@@ -23,7 +22,9 @@ def setup_workflow(expxmldir):
         return key_value
 
     # Open and read user configured experiment.yaml file
-    with open("../cfg/expdir/experiment.yaml") as expyml:
+    print(' ')
+    print('Read yaml: {}'.format(expyaml))
+    with open(expyaml) as expyml:
        parsed_expyml=yaml.safe_load(expyml)
 
     # Detect machine
@@ -46,6 +47,10 @@ def setup_workflow(expxmldir):
     search_key='wrkdir'
     wrkdir=set_key(search_key,parsed_expyml)
 
+    search_key='expxmldir'
+    expxmldir=set_key(search_key,parsed_expyml)
+
+
     # Load extracte values into list.  Echo values to stdout
     replacements = {
         'expname': expname,
@@ -54,20 +59,29 @@ def setup_workflow(expxmldir):
         'hofx_homedir': hofx_homedir,
         'wrkdir': wrkdir,
         'platform': machine,
+        'expxmldir': expxmldir,
        }
 
     print(' ')
     print("Extract following settings")
     for src, target in replacements.items():
-       print(src, target)
+       print(' ',src,': ',target)
 
+#   Check if path to workflow xml exists
+    if not os.path.exists(expxmldir):
+        print(' ')
+        print('***WARNING*** mkdir {}'.format(expxmldir))
+        os.makedirs(expxmldir)
+       
 #   Create filename for workflow xml
     expxml=expxmldir + '/' + expname + '.xml'
     print(' ')
-    print('Create xml: {}'.format(expxml))
+    print('Write xml: {}'.format(expxml))
+    print(' ')
 
 #   Write workflow xml
-    with open("../cfg/templates/hofx.xml", 'r') as xmlin:
+    xmltmplt= hofx_homedir + '/hofx/cfg/templates/hofx.xml'
+    with open(xmltmplt, 'r') as xmlin:
       with open(expxml, 'w') as xmlout:
         for line in xmlin:
           for src, target in replacements.items():
