@@ -305,7 +305,7 @@ def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
                 
                 fig = diagnostics.spatial(df, metadata, variable=f'{plotvar}/{variable}_{channel}')
                 # Save figure    
-                fig.savefig(f"{metadata['outfig']}/spatial_{metadata['obs name']}_{metadata['cycle']}_{channel}.png",
+                fig.savefig(f"{metadata['outfig']}/spatial_{metadata['obs name']}_{variable}_{metadata['cycle']}_{channel}.png",
                             bbox_inches='tight', pad_inches=0.1)
                 
         else:                
@@ -314,7 +314,7 @@ def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
             fig = diagnostics.spatial(df, metadata, variable=f'{plotvar}/{variable}')
         
             # Save figure    
-            fig.savefig(f"{metadata['outfig']}/spatial_{metadata['obs name']}_{metadata['cycle']}.png",
+            fig.savefig(f"{metadata['outfig']}/spatial_{metadata['obs name']}_{variable}_{metadata['cycle']}.png",
                         bbox_inches='tight', pad_inches=0.1)
             
     
@@ -328,7 +328,7 @@ def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
                 fig = diagnostics.spatial_binned(binned_df, metadata)
                 
                 # Save figure    
-                fig.savefig(f"{metadata['outfig']}/binned_spatial_{metadata['obs name']}_{metadata['cycle']}_{channel}.png",
+                fig.savefig(f"{metadata['outfig']}/binned_spatial_{metadata['obs name']}_{variable}_{metadata['cycle']}_{channel}.png",
                             bbox_inches='tight', pad_inches=0.1)
                 
         else:
@@ -338,7 +338,7 @@ def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
             fig = diagnostics.spatial_binned(binned_df, metadata)
         
             # Save figure    
-            fig.savefig(f"{metadata['outfig']}/binned_spatial_{metadata['obs name']}_{metadata['cycle']}.png",
+            fig.savefig(f"{metadata['outfig']}/binned_spatial_{metadata['obs name']}_{variable}_{metadata['cycle']}.png",
                         bbox_inches='tight', pad_inches=0.1)
         
     
@@ -348,14 +348,14 @@ def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
                 df, plotvar, metadata = query_plot_type(df, variable, plotType, metadata, channel=channel)
                 fig = diagnostics.scatter(df[f"{plotvar[0]}/{variable}_{channel}"], df[f"{plotvar[1]}/{variable}_{channel}"], metadata)
                 # Save figure    
-                fig.savefig(f"{metadata['outfig']}/scatter_{metadata['obs name']}_{metadata['cycle']}_{channel}.png",
+                fig.savefig(f"{metadata['outfig']}/scatter_{metadata['obs name']}_{variable}_{metadata['cycle']}_{channel}.png",
                             bbox_inches='tight', pad_inches=0.1)
         else:
             df, plotvar, metadata = query_plot_type(df, variable, plotType, metadata)
             fig = diagnostics.scatter(df[f"{plotvar[0]}/{variable}"], df[f"{plotvar[1]}/{variable}"], metadata)
             
             # Save figure    
-            fig.savefig(f"{metadata['outfig']}/scatter_{metadata['obs name']}_{metadata['cycle']}.png",
+            fig.savefig(f"{metadata['outfig']}/scatter_{metadata['obs name']}_{variable}_{metadata['cycle']}.png",
                         bbox_inches='tight', pad_inches=0.1)
             
     if plotType.startswith('lineplot'):
@@ -371,7 +371,7 @@ def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
                                           df[f"{plotvar[0]}/{variable}_{channel}"]-df[f"{plotvar[1]}/{variable}_{channel}"],
                                           metadata)
                 # Save figure    
-                fig.savefig(f"{metadata['outfig']}/lineplot_{metadata['obs name']}_{metadata['cycle']}_{channel}.png",
+                fig.savefig(f"{metadata['outfig']}/lineplot_{metadata['obs name']}_{variable}_{metadata['cycle']}_{channel}.png",
                             bbox_inches='tight', pad_inches=0.1)
         else:
             df, plotvar, metadata = query_plot_type(df, variable, plotType, metadata)
@@ -380,7 +380,7 @@ def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
                                       metadata)
         
             # Save figure    
-            fig.savefig(f"{metadata['outfig']}/lineplot_{metadata['obs name']}_{metadata['cycle']}.png",
+            fig.savefig(f"{metadata['outfig']}/lineplot_{metadata['obs name']}_{variable}_{metadata['cycle']}.png",
                         bbox_inches='tight', pad_inches=0.1)
     
     
