@@ -123,49 +123,49 @@ def plot_metadata(var):
     Grabs metadata dictionary based on the plot variable given.
     """
     
-    d = {'hofxdiff': {'cmap': 'coolwarm':
+    d = {'hofxdiff': {'cmap': 'coolwarm',
                       'vmin': -15,
                       'vmax': 15,
                       'label': 'GSI-UFO'
                       'xlabel': 'GSI',
                       'ylabel': 'UFO'
                      },
-         'gsiomf':   {'cmap': 'coolwarm':
+         'gsiomf':   {'cmap': 'coolwarm',
                       'vmin': -15,
                       'vmax': 15,
                       'label': 'Obs-GSI'
                       'xlabel': 'Obs',
                       'ylabel': 'GSI'
                      },
-         'ufoomf':   {'cmap': 'coolwarm':
+         'ufoomf':   {'cmap': 'coolwarm',
                       'vmin': -15,
                       'vmax': 15,
                       'label': 'Obs-UFO'
                       'xlabel': 'Obs',
                       'ylabel': 'UFO'
                      },
-         'gsi':      {'cmap': 'viridis':
+         'gsi':      {'cmap': 'viridis',
                       'vmin': None,
                       'vmax': None,
                       'label': 'GSI'
                       'xlabel': 'GSI',
                       'ylabel': None
                      },
-         'ufo':      {'cmap': 'viridis':
+         'ufo':      {'cmap': 'viridis',
                       'vmin': None,
                       'vmax': None,
                       'label': 'UFO'
                       'xlabel': 'UFO',
                       'ylabel': None
                      },
-         'obs':      {'cmap': 'viridis':
+         'obs':      {'cmap': 'viridis',
                       'vmin': None,
                       'vmax': None,
                       'label': 'Observations'
                       'xlabel': 'Observations',
                       'ylabel': None
                      },
-         'hofx':     {'cmap': 'coolwarm':
+         'hofx':     {'cmap': 'coolwarm',
                       'vmin': None,
                       'vmax': None,
                       'label': 'GSI-UFO'
