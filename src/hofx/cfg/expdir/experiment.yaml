@@ -3,12 +3,14 @@
 #  begdate:  start date
 #  enddate:  end date
 #  hofx_homedir:  path to src directory of hofxcs clone
-#  wrkdir:  directory to which output files are written
+#  wrkdir:  directory to which cycled output files are written
+#  expxmldir:  directory to which xml file is written
 expname: 'prhofx'
 begdate: '2020121500'
 enddate: '2020121600'
-hofx_homedir: '/work/noaa/da/Russ.Treadon/git/hofxcs/feature_rocoto/src'
+hofx_homedir: '/work/noaa/da/rtreadon/git/hofxcs/feature_rocoto/src'
 wrkdir: '/work/noaa/stmp/rtreadon/rocoto'
+expxmldir: '/work/noaa/da/rtreadon/para_gfs/prhofx'
 #
 # Set bundle and jedi_bundle dpending on machine
 ##bundle: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/bundle
