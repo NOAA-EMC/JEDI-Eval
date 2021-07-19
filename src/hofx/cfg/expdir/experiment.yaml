@@ -56,8 +56,14 @@ bkg_db: ufo_eval_ref
 bkg_dir: $(experiment_dir)/{{cycle}}/RESTART
 bkg_tiles: [1,2,3,4,5,6]
 diag_db: local
+diag_dir: $(experiment_dir)/diags
 window_offset: PT3H
 step_cycle: PT6H
+plot_dir: $(experiment_dir)/plots/{{current_cycle}}
+diag_types:
+- histogram_counts
+- histogram_omfdiff
+- scatter_hofx
 obs_list:
 - $<< $(bundle)/ufo/ewok/jedi-gdas/aircraft.yaml
 - $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_n19.yaml
