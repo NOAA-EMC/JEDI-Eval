@@ -126,49 +126,49 @@ def plot_metadata(var):
     d = {'hofxdiff': {'cmap': 'coolwarm',
                       'vmin': -15,
                       'vmax': 15,
-                      'label': 'GSI-UFO'
+                      'label': 'GSI-UFO',
                       'xlabel': 'GSI',
                       'ylabel': 'UFO'
                      },
          'gsiomf':   {'cmap': 'coolwarm',
                       'vmin': -15,
                       'vmax': 15,
-                      'label': 'Obs-GSI'
+                      'label': 'Obs-GSI',
                       'xlabel': 'Obs',
                       'ylabel': 'GSI'
                      },
          'ufoomf':   {'cmap': 'coolwarm',
                       'vmin': -15,
                       'vmax': 15,
-                      'label': 'Obs-UFO'
+                      'label': 'Obs-UFO',
                       'xlabel': 'Obs',
                       'ylabel': 'UFO'
                      },
          'gsi':      {'cmap': 'viridis',
                       'vmin': None,
                       'vmax': None,
-                      'label': 'GSI'
+                      'label': 'GSI',
                       'xlabel': 'GSI',
                       'ylabel': None
                      },
          'ufo':      {'cmap': 'viridis',
                       'vmin': None,
                       'vmax': None,
-                      'label': 'UFO'
+                      'label': 'UFO',
                       'xlabel': 'UFO',
                       'ylabel': None
                      },
          'obs':      {'cmap': 'viridis',
                       'vmin': None,
                       'vmax': None,
-                      'label': 'Observations'
+                      'label': 'Observations',
                       'xlabel': 'Observations',
                       'ylabel': None
                      },
          'hofx':     {'cmap': 'coolwarm',
                       'vmin': None,
                       'vmax': None,
-                      'label': 'GSI-UFO'
+                      'label': 'GSI-UFO',
                       'xlabel': 'GSI',
                       'ylabel': 'UFO'
                      }
@@ -183,70 +183,78 @@ def query_plot_type(df, variable, plotType, metadata, channel=None):
         plotvar = 'hofxdiff'
         if channel:
             df[f'hofxdiff/{variable}_{channel}'] = df[f'GsiHofXBc/{variable}_{channel}'] - df[f'hofx/{variable}_{channel}']
+            metadata['title'] = f"{metadata['obs name']} {variable}\nChannel {channel} - GSI-UFO"
         else:
             df[f'hofxdiff/{variable}'] = df[f'GsiHofXBc/{variable}'] - df[f'hofx/{variable}']
+            metadata['title'] = f"{metadata['obs name']} {variable} - GSI-UFO"
 
-        plot_dict = plot_metadata['hofxdiff']
+        plot_dict = plot_metadata('hofxdiff')
         metadata = dict(metadata, **plot_dict)
-        
-        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - GSI-UFO"
 
 
     elif plotType.endswith('gsiomf'):
         plotvar = 'omf'
         if channel:
             df[f'omf/{variable}_{channel}'] = df[f'ObsValue/{variable}_{channel}'] - df[f'GsiHofXBc/{variable}_{channel}']
+            metadata['title'] = f"{metadata['obs name']} {variable}\nChannel {channel} - Obs-GSI"
         else:
             df[f'omf/{variable}'] = df[f'ObsValue/{variable}'] - df[f'GsiHofXBc/{variable}']
+            metadata['title'] = f"{metadata['obs name']} {variable} - Obs-GSI"
         
-        plot_dict = plot_metadata['gsiomf']
+        plot_dict = plot_metadata('gsiomf')
         metadata = dict(metadata, **plot_dict)
         
-        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - Obs-GSI"
-
     elif plotType.endswith('ufoomf'):
         plotvar = 'omf'
         if channel:
             df[f'omf/{variable}_{channel}'] = df[f'ObsValue/{variable}_{channel}'] - df[f'hofx/{variable}_{channel}']
+            metadata['title'] = f"{metadata['obs name']} {variable}\nChannel {channel} - Obs-UFO"
         else:
             df[f'omf/{variable}'] = df[f'ObsValue/{variable}'] - df[f'hofx/{variable}']
+            metadata['title'] = f"{metadata['obs name']} {variable} - Obs-UFO"
         
-        plot_dict = plot_metadata['ufoomf']
+        plot_dict = plot_metadata('ufoomf')
         metadata = dict(metadata, **plot_dict)
-        
-        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - Obs-UFO"
 
     elif plotType.endswith('gsi'):
         plotvar = 'GsiHofXBc'
+        if channel:
+            metadata['title'] = f"{metadata['obs name']} {variable}\nChannel {channel} - GSI"
+        else:
+            metadata['title'] = f"{metadata['obs name']} {variable} - GSI"
         
-        plot_dict = plot_metadata['gsi']
+        plot_dict = plot_metadata('gsi')
         metadata = dict(metadata, **plot_dict)
-        
-        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - GSI"
 
     elif plotType.endswith('ufo'):
         plotvar = 'hofx'
-        
-        plot_dict = plot_metadata['ufo']
+        if channel:
+            metadata['title'] = f"{metadata['obs name']} {variable}\nChannel {channel} - UFO"
+        else:
+            metadata['title'] = f"{metadata['obs name']} {variable}- UFO"
+            
+        plot_dict = plot_metadata('ufo')
         metadata = dict(metadata, **plot_dict)
-        
-        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - UFO"
 
     elif plotType.endswith('obs'):
         plotvar = 'ObsValue'
-        
-        plot_dict = plot_metadata['obs']
+        if channel:
+            metadata['title'] = f"{metadata['obs name']} {variable}\nChannel {channel} - Observations"
+        else:
+            metadata['title'] = f"{metadata['obs name']} {variable}- Observations"
+            
+        plot_dict = plot_metadata('obs')
         metadata = dict(metadata, **plot_dict)
-        
-        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - Observations"
         
     elif plotType.endswith('hofx'):
         plotvar = ['GsiHofXBc', 'hofx']
-        
-        plot_dict = plot_metadata['hofx']
+        if channel:
+            metadata['title'] = f"{metadata['obs name']} {variable}\nChannel {channel} - GSI-UFO"
+        else:
+            metadata['title'] = f"{metadata['obs name']} {variable}\nChannel {channel} - GSI-UFO"
+            
+        plot_dict = plot_metadata('hofx')
         metadata = dict(metadata, **plot_dict)
-        
-        metadata['title'] = f"{metadata['obs name']} {variable} channel {channel} - GSI-UFO"
         
     else:
         raise TypeError(f'Plot variable {plotType} is not recognized. Please enter valid plot variable.')
@@ -281,6 +289,11 @@ def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
         plotType: str of the type of plot requested
         plot_dir: outdir where the plot should be saved to
     """
+    
+    ###########
+    plot_dir='./'
+    ###########
+    
     
     metadata = parse_ob_dict(ob_dict)
     channels = metadata['channels']
@@ -343,6 +356,10 @@ def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
         
     
     if plotType.startswith('scatter_hofx'):
+        
+        # Ensures no 0's by GSI that mess up scatter
+        df = df.replace(0, np.nan).dropna()
+        
         if channels:
             for channel in inputchans:   
                 df, plotvar, metadata = query_plot_type(df, variable, plotType, metadata, channel=channel)
@@ -384,4 +401,4 @@ def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
                         bbox_inches='tight', pad_inches=0.1)
     
     
-    return
+    return df
