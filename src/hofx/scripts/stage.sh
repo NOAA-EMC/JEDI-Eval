@@ -1,6 +1,6 @@
 #!/bin/bash
-# merge_example.sh
-# example of merge IODA diags after running HofX 
+# stage_example.sh
+# example of staging files for hofx
 
 if [ "$#" -ne 2 ]; then
   echo "Usage: $0 /path/to/expdir /path/to/workdir" >&2
@@ -24,7 +24,7 @@ shopt -s expand_aliases
 
 #---- get machine and setup runtime environment
 set +eux
-machine=$(detect_host)
+machine=${machine:-$(detect_host)}
 source $gitdir/cfg/platform/$machine/JEDI
 export R2D2_CONFIG=$gitdir/cfg/platform/$machine/r2d2_config.yaml
 set -eux
@@ -33,8 +33,8 @@ mkdir -p $WORKDIR
 cd $WORKDIR
 
 #---- run genYAML to create YAML file
-export CDATE=2020121500
-$gitdir/bin/genYAML merge $EXPDIR $WORKDIR/merge.yaml
+export CDATE=${CDATE:-2020121500}
+$gitdir/bin/genYAML stage $EXPDIR $WORKDIR/stage.yaml
 
-#---- run mergeDiags based on configuration
-$gitdir/bin/mergeDiags $WORKDIR/merge.yaml
+#---- run stageJEDI based on configuration
+$gitdir/bin/stageJEDI $WORKDIR/stage.yaml
