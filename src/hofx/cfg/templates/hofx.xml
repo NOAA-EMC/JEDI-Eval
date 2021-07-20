@@ -66,6 +66,13 @@
 	<!ENTITY RESOURCES_ARCHIVE_GDAS "<nodes>1:ppn=1:tpp=1</nodes>">
 	<!ENTITY NATIVE_ARCHIVE_GDAS    "--export=NONE">
 
+        <!ENTITY QUEUE_DIAGS_GDAS     "&QUEUE;">
+        <!ENTITY PARTITION_DIAGS_GDAS "&PARTITION_BATCH;">
+        <!ENTITY WALLTIME_DIAGS_GDAS  "00:15:00">
+        <!ENTITY RESOURCES_DIAGS_GDAS "<nodes>1:ppn=1:tpp=1</nodes>">
+        <!ENTITY NATIVE_DIAGS_GDAS    "--export=NONE">
+
+
 ]>
 
 <workflow realtime="F" scheduler="&SCHEDULER;" cyclethrottle="&CYCLETHROTTLE;" taskthrottle="&TASKTHROTTLE;">
@@ -191,6 +198,36 @@
 	<dependency>
 		<and>
 			<taskdep task="gdas_merge"/>
+		</and>
+	</dependency>
+
+</task>
+
+<task name="gdas_diags" cycledefs="gdas" maxtries="&MAXTRIES;">
+
+	<command>&HOFX_HOMEDIR;/hofx/rocoto/gdas_diags.sh</command>
+
+	<jobname><cyclestr>&PSLOT;_gdas_diags_@H</cyclestr></jobname>
+	<account>&ACCOUNT;</account>
+	<queue>&QUEUE_DIAGS_GDAS;</queue>
+	<partition>&PARTITION_BATCH;</partition>
+	&RESOURCES_DIAGS_GDAS;
+	<walltime>&WALLTIME_DIAGS_GDAS;</walltime>
+	
+	<native>&NATIVE_DIAGS_GDAS;</native>
+
+	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_diags.log</cyclestr></join>
+
+	<envar><name>SLURM_SET</name><value>YES</value></envar>
+        <envar><name>RUN_ENVIR</name><value>&RUN_ENVIR;</value></envar>
+        <envar><name>machine</name><value>&machine;</value></envar>
+        <envar><name>HOFX_HOMEDIR</name><value>&HOFX_HOMEDIR;</value></envar>
+        <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
+	<envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+
+	<dependency>
+		<and>
+			<taskdep task="gdas_archive"/>
 		</and>
 	</dependency>
 
