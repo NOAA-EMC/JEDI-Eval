@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+import os
 
 script_dir = 'src/hofx/bin'
 scripts = [os.path.join(script_dir, x) for x in os.listdir(script_dir)]
