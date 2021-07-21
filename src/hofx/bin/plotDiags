@@ -25,6 +25,7 @@ def run_plot(yaml):
         # grab variables from the ob['obs space'] dict
         # and call hofx.diag functions to make figures
         # get list of variables
+        ob['diag_dir'] = diag_dir
         var_list = ob['obs space']['simulated variables']
         for var in var_list:
             for plot in plot_types:

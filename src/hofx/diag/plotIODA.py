@@ -265,7 +265,7 @@ def parse_ob_dict(ob_dict):
     
     obsspace = ob_dict['obs space']
     obsname = obsspace['name']
-    obsfile = obsspace['obsdataout']['obsfile']
+    obsfile = os.path.join(ob['diag_dir'], os.path.basename(obsspace['obsdataout']['obsfile']))
     cycle = obsfile.split('/')[-1].split('.')[-2]
     
     if 'channels' in obsspace:
