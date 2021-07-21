@@ -1,6 +1,6 @@
 #!/bin/bash
-# archive_example.sh
-# example of archiving diags to R2D2 after merging
+# archive.sh
+# archive diags to R2D2 after merging
 
 if [ "$#" -ne 2 ]; then
   echo "Usage: $0 /path/to/expdir /path/to/workdir" >&2

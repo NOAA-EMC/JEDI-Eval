@@ -1,6 +1,6 @@
 #!/bin/bash
-# merge.sh
-# merge IODA diags after running HofX
+# plots.sh
+# plotting diags
 
 if [ "$#" -ne 2 ]; then
   echo "Usage: $0 /path/to/expdir /path/to/workdir" >&2
@@ -25,8 +25,7 @@ shopt -s expand_aliases
 #---- get machine and setup runtime environment
 set +eux
 machine=${machine:-$(detect_host)}
-source $gitdir/cfg/platform/$machine/JEDI
-export R2D2_CONFIG=$gitdir/cfg/platform/$machine/r2d2_config.yaml
+source $gitdir/cfg/platform/$machine/hofxdiag
 set -eux
 
 mkdir -p $WORKDIR
@@ -34,7 +33,7 @@ cd $WORKDIR
 
 #---- run genYAML to create YAML file
 export CDATE=${CDATE:-2020121500}
-$gitdir/bin/genYAML merge $EXPDIR $WORKDIR/merge.yaml
 
-#---- run mergeDiags based on configuration
-$gitdir/bin/mergeDiags $WORKDIR/merge.yaml
+#---- make figures from just this cycle
+$gitdir/bin/plotDiags $WORKDIR/diags.yaml
+

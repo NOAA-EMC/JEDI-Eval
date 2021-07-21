@@ -1,6 +1,6 @@
 #!/bin/bash
-# hofx_example.sh
-# example of running hofx executable
+# hofx.sh
+# run hofx executable
 
 if [ "$#" -ne 2 ]; then
   echo "Usage: $0 /path/to/expdir /path/to/workdir" >&2
