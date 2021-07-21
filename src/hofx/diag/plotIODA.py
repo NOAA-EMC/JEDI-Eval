@@ -265,7 +265,7 @@ def parse_ob_dict(ob_dict):
     
     obsspace = ob_dict['obs space']
     obsname = obsspace['name']
-    obsfile = os.path.join(ob['diag_dir'], os.path.basename(obsspace['obsdataout']['obsfile']))
+    obsfile = os.path.join(ob_dict['diag_dir'], os.path.basename(obsspace['obsdataout']['obsfile']))
     cycle = obsfile.split('/')[-1].split('.')[-2]
     
     if 'channels' in obsspace:
@@ -399,6 +399,3 @@ def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
             # Save figure    
             fig.savefig(f"{metadata['outfig']}/lineplot_{metadata['obs name']}_{variable}_{metadata['cycle']}.png",
                         bbox_inches='tight', pad_inches=0.1)
-    
-    
-    return df
