@@ -1,36 +1,40 @@
 import numpy as np
 import pandas as pd
-import xarray as xr
 import os
 import ioda
 import yaml
 import emcpy
 from emcpy.plots import map2d, scatter
 
-__all__ = ['genDiagnostics']
+__all__ = ['gen_diagnostics']
 
-# Factory for plot type
 
 def _spatial(df, metadata):
-
+    """
+    Plots and saves a spatial plot on a map.
+    """
+    
     if metadata['channel']:
         data = df[f"{metadata['plot var']}/{metadata['variable']}_{metadata['channel']}"]
     else:
         data = df[f"{metadata['plot var']}/{metadata['variable']}"]
 
-    fig = emcpy.plots.map2d(df['latitude'], df['longitude'],
-                            data, domain='global',
-                            plotmap=True, cmap=metadata['cmap'],
-                            vmin=metadata['vmin'],
-                            vmax=metadata['vmax'],
-                            title=metadata['title'],
-                            time_title=metadata['time title'])
+    fig = map2d(df['latitude'], df['longitude'],
+                data, domain = metadata['domain'],
+                plotmap=True, cmap=metadata['cmap'],
+                vmin=metadata['vmin'],
+                vmax=metadata['vmax'],
+                title=metadata['title'],
+                time_title=metadata['time title'])
 
     fig.savefig(f"{metadata['savefile']}_spatial.png", bbox_inches='tight', pad_inches=0.1)
 
     return
 
 def _scatter(df, metadata):
+    """
+    Plots and saves a scatter plot.
+    """
 
     if metadata['channel']:
         x = df[f"{metadata['data var'][0]}/{metadata['variable']}_{metadata['channel']}"]
@@ -39,14 +43,14 @@ def _scatter(df, metadata):
         x = df[f"{metadata['data var'][0]}/{metadata['variable']}"]
         y = df[f"{metadata['data var'][-1]}/{metadata['variable']}"]
 
-    fig = emcpy.plots.scatter(x, y,
-                              linear_regression=True,
-                              density=False, grid=True,
-                              title=metadata['title'],
-                              time_title=metadata['cycle'],
-                              xlabel=metadata['xlabel'],
-                              ylabel=metadata['ylabel']
-                             )
+    fig = scatter(x, y,
+                  linear_regression=True,
+                  density=False, grid=True,
+                  title=metadata['title'],
+                  time_title=metadata['cycle'],
+                  xlabel=metadata['xlabel'],
+                  ylabel=metadata['ylabel']
+                 )
 
     fig.savefig(f"{metadata['savefile']}_scatter.png", bbox_inches='tight', pad_inches=0.1)
 
@@ -54,6 +58,9 @@ def _scatter(df, metadata):
 
 
 def _query_plot_type(df, metadata):
+    """
+    Calls function based on 'plot type' from metadata.
+    """
     plot_types = {
         'spatial': _spatial,
         'scatter': _scatter
@@ -62,10 +69,10 @@ def _query_plot_type(df, metadata):
     return plot_types[metadata['plot type']](df, metadata)
 
 
-# Factory for evaluation type
-
 def _hofxdiff(metadata):
-    
+    """
+    Grabs metadata for hofxdiff evaluation type input.
+    """
     plot_opts = {
         'plot var' : 'diff',
         'data vars': ['GsiHofXBc', 'hofx'],
@@ -94,7 +101,9 @@ def _hofxdiff(metadata):
     return metadata
 
 def _gsiomf(metadata):
-    
+    """
+    Grabs metadata for gsiomf evaluation type input.
+    """
     plot_opts = {
         'plot var': 'diff',
         'data vars': ['ObsValue', 'GsiHofXBc'],
@@ -117,7 +126,9 @@ def _gsiomf(metadata):
     return metadata
 
 def _ufoomf(metadata):
-    
+    """
+    Grabs metadata for ufoomf evaluation type input.
+    """
     plot_opts = {
         'plot var': 'diff',
         'data vars': ['ObsValue', 'hofx'],
@@ -140,7 +151,9 @@ def _ufoomf(metadata):
     return metadata
 
 def _gsi(metadata):
-    
+    """
+    Grabs metadata for gsi evaluation type input.
+    """
     plot_opts = {
         'plot var': 'GsiHofXBc',
         'data vars': ['GsiHofXBc'],
@@ -163,7 +176,9 @@ def _gsi(metadata):
     return metadata
 
 def _ufo(metadata):
-    
+    """
+    Grabs metadata for ufo evaluation type input.
+    """
     plot_opts = {
         'plot var': 'hofx',
         'data vars': ['hofx'],
@@ -186,7 +201,9 @@ def _ufo(metadata):
     return metadata
 
 def _obs(metadata):
-    
+    """
+    Grabs metadata for obs evaluation type input.
+    """
     plot_opts = {
         'plot var': 'ObsValue',
         'data vars': ['ObsValue'],
@@ -210,6 +227,9 @@ def _obs(metadata):
 
 
 def _query_eval_type(metadata):
+    """
+    Calls function based on 'eval type' from metadata.
+    """
     plot_types = {
         'hofxdiff': _hofxdiff,
         'gsiomf': _gsiomf,
@@ -222,10 +242,11 @@ def _query_eval_type(metadata):
     return plot_types[metadata['eval type']](metadata)
 
 
-# Grab data and generate dataframe
-
 def _get_data(obsspace, variable):
-    
+    """
+    Grabs data specific to variable from IODA
+    obsspace.
+    """
     var = obsspace.Variable(variable)
     data = var.read_data()
     
@@ -233,7 +254,9 @@ def _get_data(obsspace, variable):
 
 
 def _get_lat_lon(obsspace):
-    
+    """
+    Grabs lat and lon data from IODAv2 file.
+    """
     lats = _get_data(obsspace, variable='MetaData/latitude')
     lons = _get_data(obsspace, variable='MetaData/longitude')
     
@@ -320,16 +343,17 @@ def _get_input_channels(channels):
 
 
 def _gen_metadata(ob_dict, variable, plotType, plot_dir):
+    """
+    Uses initial inputs from yaml input to create a 
+    metadata dictionary that is used to create diagnostics.
+    """
     
     obsspace = ob_dict['obs space']
     obsname = obsspace['name']
     obsfile = os.path.join(ob_dict['diag_dir'], os.path.basename(obsspace['obsdataout']['obsfile']))
     cycle = obsfile.split('/')[-1].split('.')[-2]
     
-    if 'channels' in obsspace:
-        str_channels = obsspace['channels']
-    else:
-        str_channels = None
+    str_channels = obsspace['channels'] if 'channels' in obsspace else None
         
     # separate plotType variables; add to metadata
     plotvar = plotType.split('_')[0]
@@ -348,10 +372,11 @@ def _gen_metadata(ob_dict, variable, plotType, plot_dir):
     return metadata
 
 
-# Main driver function
-
-def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
+def gen_diagnostics(ob_dict, variable, plotType, plot_dir='./'):
     """
+    Driver function to grab metadata, create a dataframe, and generate
+    diagnostics from a yaml input. 
+    
     Args:
         ob_dict: dictionary containing info on obs file
         variable: variable from ob to create diagnostic
@@ -382,4 +407,6 @@ def genDiagnostics(ob_dict, variable, plotType, plot_dir='./'):
         
         _query_plot_type(df, metadata)
         
+            
     return
+
