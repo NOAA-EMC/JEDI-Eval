@@ -25,7 +25,7 @@ shopt -s expand_aliases
 #---- get machine and setup runtime environment
 set +eux
 machine=${machine:-$(detect_host)}
-source $gitdir/cfg/platform/$machine/JEDI
+source $gitdir/cfg/platform/$machine/hofxdiag
 export R2D2_CONFIG=$gitdir/cfg/platform/$machine/r2d2_config.yaml
 set -eux
 
