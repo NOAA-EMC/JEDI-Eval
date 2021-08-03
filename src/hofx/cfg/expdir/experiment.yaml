@@ -8,7 +8,7 @@
 expname: 'prhofx'
 begdate: '2020121500'
 enddate: '2020121600'
-hofx_homedir: '/work/noaa/da/rtreadon/git/hofxcs/feature_rocoto/src'
+hofx_homedir: '/work/noaa/da/rtreadon/git/hofxcs/plotIODA/src'
 wrkdir: '/work/noaa/stmp/rtreadon/rocoto'
 expxmldir: '/work/noaa/da/rtreadon/para_gfs/prhofx'
 #
@@ -16,7 +16,7 @@ expxmldir: '/work/noaa/da/rtreadon/para_gfs/prhofx'
 ##bundle: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/bundle
 ##jedi_build: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/build-20210629
 bundle: /work/noaa/da/cmartin/JEDI/testing/intel/bundle
-jedi_build: /work/noaa/da/cmartin/JEDI/testing/intel/build-20210629
+jedi_build: /work/noaa/da/cmartin/JEDI/testing/intel/build-20210730
 #
 # End of user settings
 #
@@ -56,8 +56,14 @@ bkg_db: ufo_eval_ref
 bkg_dir: $(experiment_dir)/{{cycle}}/RESTART
 bkg_tiles: [1,2,3,4,5,6]
 diag_db: local
+diag_dir: $(experiment_dir)/diags
 window_offset: PT3H
 step_cycle: PT6H
+plot_dir: $(experiment_dir)/plots/{{current_cycle}}
+diag_types:
+- histogram_counts
+- histogram_omfdiff
+- scatter_hofx
 obs_list:
 - $<< $(bundle)/ufo/ewok/jedi-gdas/aircraft.yaml
 - $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_n19.yaml
