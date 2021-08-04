@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import click
 import hofx
+import hofx.diag
 
 @click.command()
 @click.argument('yaml', type=click.Path(exists=True))
@@ -26,9 +27,10 @@ def run_plot(yaml):
         # and call hofx.diag functions to make figures
         # get list of variables
         var_list = ob['obs space']['simulated variables']
+        ob['diag_dir'] = diag_dir
         for var in var_list:
             for plot in plot_types:
-                hofx.diag.plotIODA.genDiagnostics(ob, var, plot, plot_dir)        
+                hofx.diag.plotIODA.gen_diagnostics(ob, var, plot, plot_dir)        
 
 
 if __name__ == '__main__':
