@@ -8,15 +8,15 @@
 expname: 'prhofx'
 begdate: '2020121500'
 enddate: '2020121600'
-hofx_homedir: '/work/noaa/da/rtreadon/git/hofxcs/feature_rocoto/src'
-wrkdir: '/work/noaa/stmp/rtreadon/rocoto'
-expxmldir: '/work/noaa/da/rtreadon/para_gfs/prhofx'
+hofx_homedir: '/work/noaa/da/rtreadon/git/hofxcs/develop/src'  # change to your path
+wrkdir: '/work/noaa/stmp/rtreadon/rocoto'                      # change to your path
+expxmldir: '/work/noaa/da/rtreadon/para_gfs/prhofx'            # change to your path
 #
 # Set bundle and jedi_bundle dpending on machine
 ##bundle: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/bundle
 ##jedi_build: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/build-20210629
 bundle: /work/noaa/da/cmartin/JEDI/testing/intel/bundle
-jedi_build: /work/noaa/da/cmartin/JEDI/testing/intel/build-20210629
+jedi_build: /work/noaa/da/cmartin/JEDI/stable/intel/build
 #
 # End of user settings
 #
