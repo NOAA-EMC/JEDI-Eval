@@ -120,6 +120,9 @@ class IODAdiagnostic:
         # Create dataframe
         df = pd.DataFrame(df_dict)
 
+        # drop rows in df with nans and reset index
+        df = df.dropna().reset_index()
+
         # add 'diff' column when data vars has 2 variables
         if len(self.data_vars) == 2:
             if channel:
@@ -355,7 +358,8 @@ def _query_plot_type(df, diag):
                          vmin=diag.metadata['vmin'],
                          vmax=diag.metadata['vmax'],
                          title=diag.metadata['title'],
-                         time_title=diag.metadata['cycle']),
+                         time_title=diag.metadata['cycle']
+                         cbar_label=diag.metadata['label']),
 
         'scatter': scatter(df[f"{diag.data_vars[0]}/{diag.variable}"].to_numpy(),
                            df[f"{diag.data_vars[-1]}/{diag.variable}"].to_numpy(),
