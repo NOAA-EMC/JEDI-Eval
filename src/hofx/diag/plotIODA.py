@@ -16,8 +16,8 @@ class IODAdiagnostic:
 
         obsspace = ob_dict['obs space']
         self.obsname = obsspace['name']
-        self.obspath = obsspace['obsdataout']['obsfile']
-        self.obsfile = os.path.join(os.path.basename(obsspace['obsdataout']['obsfile']))
+        self.obsfile = os.path.basename(obsspace['obsdataout']['obsfile'])
+        self.obspath = os.path.join(ob_dict['diag_dir'], self.obsfile)
         self.cycle = self.obsfile.split('/')[-1].split('.')[-2]
         self.str_channels = obsspace['channels'] if 'channels' in obsspace else None
 
