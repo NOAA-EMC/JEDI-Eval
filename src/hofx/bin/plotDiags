@@ -2,6 +2,7 @@
 import click
 import hofx
 import hofx.diag
+from solo.basic_files import mkdir
 
 @click.command()
 @click.argument('yaml', type=click.Path(exists=True))
@@ -21,6 +22,7 @@ def run_plot(yaml):
     diag_dir = plot_cfg['diags']['diag_dir']
     # plot output dir
     plot_dir = plot_cfg['plot_dir']
+    mkdir(plot_dir)
     # TODO use multiprocessing
     for ob in ob_list:
         # grab variables from the ob['obs space'] dict

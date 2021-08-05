@@ -355,11 +355,11 @@ def _query_plot_type(df, diag):
                          vmin=diag.metadata['vmin'],
                          vmax=diag.metadata['vmax'],
                          title=diag.metadata['title'],
-                         time_title=diag.metadata['time title']),
+                         time_title=diag.metadata['cycle']),
 
-        'scatter': scatter(df[f"{diag.data_var[0]}/{diag.variable}"],
-                           df[f"{diag.data_var[-1]}/{diag.variable}"],
-                           linear_regression=True,
+        'scatter': scatter(df[f"{diag.data_vars[0]}/{diag.variable}"].to_numpy(),
+                           df[f"{diag.data_vars[-1]}/{diag.variable}"].to_numpy(),
+                           linear_regression=False,
                            density=False, grid=True,
                            title=diag.metadata['title'],
                            time_title=diag.metadata['cycle'],
@@ -415,7 +415,7 @@ def gen_diagnostics(ob_dict, variable, plot_type, plot_dir='./'):
             diag.variable = f"{diag.variable}_{channel}"
             fig = _query_plot_type(df, diag)
 
-            fig.savefig(f"{diag.savefile}.png", bbox_inches='tight', pad_inches=0.1)
+            fig.savefig(f"{os.path.join(diag.outfig,diag.metadata['savefile'])}.png", bbox_inches='tight', pad_inches=0.1)
 
     else:
         _query_eval_type(diag)
@@ -423,7 +423,8 @@ def gen_diagnostics(ob_dict, variable, plot_type, plot_dir='./'):
         df = diag.gen_plot_df(obsspace)
 
         fig = _query_plot_type(df, diag)
-        fig.savefig(f"{diag.savefile}.png", bbox_inches='tight', pad_inches=0.1)
+        print(f"{diag.metadata['savefile']}.png")
+        fig.savefig(f"{os.path.join(diag.outfig,diag.metadata['savefile'])}.png", bbox_inches='tight', pad_inches=0.1)
 
 
     return
