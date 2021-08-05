@@ -358,7 +358,7 @@ def _query_plot_type(df, diag):
                          vmin=diag.metadata['vmin'],
                          vmax=diag.metadata['vmax'],
                          title=diag.metadata['title'],
-                         time_title=diag.metadata['cycle']
+                         time_title=diag.metadata['cycle'],
                          cbar_label=diag.metadata['label']),
 
         'scatter': scatter(df[f"{diag.data_vars[0]}/{diag.variable}"].to_numpy(),
