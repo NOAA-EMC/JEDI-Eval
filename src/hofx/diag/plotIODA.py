@@ -416,6 +416,7 @@ def gen_diagnostics(ob_dict, variable, plot_type, plot_dir='./'):
             fig = _query_plot_type(df, diag)
 
             fig.savefig(f"{os.path.join(diag.outfig,diag.metadata['savefile'])}.png", bbox_inches='tight', pad_inches=0.1)
+            diag.variable = variable
 
     else:
         _query_eval_type(diag)
