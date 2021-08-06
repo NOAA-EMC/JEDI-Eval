@@ -25,8 +25,9 @@
         <!ENTITY WRKDIR "wrkdir">
 	<!ENTITY ROTDIR "&WRKDIR;/&PSLOT;">
 
-        <!-- HOFX directory -->
+        <!-- HOFX and EMCPY directories -->
         <!ENTITY HOFX_HOMEDIR "hofx_homedir">
+        <!ENTITY EMCPY_HOMEDIR "emcpy_homedir">
 
 	<!-- Machine related entities -->
 	<!ENTITY ACCOUNT    "da-cpu">
@@ -223,6 +224,7 @@
         <envar><name>RUN_ENVIR</name><value>&RUN_ENVIR;</value></envar>
         <envar><name>machine</name><value>&machine;</value></envar>
         <envar><name>HOFX_HOMEDIR</name><value>&HOFX_HOMEDIR;</value></envar>
+        <envar><name>EMCPY_HOMEDIR</name><value>&EMCPY_HOMEDIR;</value></envar>
         <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
 	<envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
 

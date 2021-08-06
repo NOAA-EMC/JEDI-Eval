@@ -2,7 +2,7 @@
 
 set -eux
 
-export PYTHONPATH=$HOFX_HOMEDIR
+export PYTHONPATH=$HOFX_HOMEDIR:$EMCPY_HOMEDIR
 
 $HOFX_HOMEDIR/hofx/scripts/diags.sh $HOFX_HOMEDIR/hofx/cfg/expdir $ROTDIR/hofx_tmp
 rc=$?

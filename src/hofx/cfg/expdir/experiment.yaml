@@ -3,12 +3,14 @@
 #  begdate:  start date
 #  enddate:  end date
 #  hofx_homedir:  path to src directory of hofxcs clone
+#  emcpy_homedir:  path to src directory of emcpy clone
 #  wrkdir:  directory to which cycled output files are written
 #  expxmldir:  directory to which xml file is written
 expname: 'prhofx'
 begdate: '2020121500'
 enddate: '2020121600'
 hofx_homedir: '/work/noaa/da/rtreadon/git/hofxcs/develop/src'  # change to your path
+emcpy_homedir: '/work/noaa/da/rtreadon/git/emcpy/src'          # change to your path
 wrkdir: '/work/noaa/stmp/rtreadon/rocoto'                      # change to your path
 expxmldir: '/work/noaa/da/rtreadon/para_gfs/prhofx'            # change to your path
 #
