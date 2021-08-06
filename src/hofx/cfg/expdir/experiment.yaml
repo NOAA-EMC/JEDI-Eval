@@ -61,9 +61,9 @@ window_offset: PT3H
 step_cycle: PT6H
 plot_dir: $(experiment_dir)/plots/{{current_cycle}}
 diag_types:
-- histogram_counts
-- histogram_omfdiff
-- scatter_hofx
+- scatter_hofxdiff
+- spatial_gsiomf
+- spatial_ufoomf
 obs_list:
 - $<< $(bundle)/ufo/ewok/jedi-gdas/aircraft.yaml
 - $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_n19.yaml
