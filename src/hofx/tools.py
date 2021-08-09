@@ -33,7 +33,7 @@ def replace_vars(config):
     # as appropriate with either other dictionary key/value pairs
     # or environment variables
     config = Template.substitute_structure_from_environment(config)
-    config = Template.substitute_with_dependencies(config, TemplateConstants.DOLLAR_PARENTHESES)
+    config = Template.substitute_with_dependencies(config, config, TemplateConstants.DOLLAR_PARENTHESES)
     config = Template.substitute_structure(config, TemplateConstants.DOUBLE_CURLY_BRACES, config.get)
     return config
 

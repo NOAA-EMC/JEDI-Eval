@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import click
 import hofx
+import hofx.diag
+from solo.basic_files import mkdir
 
 @click.command()
 @click.argument('yaml', type=click.Path(exists=True))
@@ -20,11 +22,17 @@ def run_plot(yaml):
     diag_dir = plot_cfg['diags']['diag_dir']
     # plot output dir
     plot_dir = plot_cfg['plot_dir']
+    mkdir(plot_dir)
     # TODO use multiprocessing
     for ob in ob_list:
         # grab variables from the ob['obs space'] dict
         # and call hofx.diag functions to make figures
-        print(ob['obs space'])
+        # get list of variables
+        var_list = ob['obs space']['simulated variables']
+        ob['diag_dir'] = diag_dir
+        for var in var_list:
+            for plot in plot_types:
+                hofx.diag.plotIODA.gen_diagnostics(ob, var, plot, plot_dir)        
 
 
 if __name__ == '__main__':

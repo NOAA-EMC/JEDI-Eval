@@ -44,6 +44,9 @@ def setup_workflow(expyaml):
     search_key='hofx_homedir'
     hofx_homedir=set_key(search_key,parsed_expyml)
 
+    search_key='emcpy_homedir'
+    emcpy_homedir=set_key(search_key,parsed_expyml)
+
     search_key='wrkdir'
     wrkdir=set_key(search_key,parsed_expyml)
 
@@ -57,6 +60,7 @@ def setup_workflow(expyaml):
         'begdate': begdate,
         'enddate': enddate,
         'hofx_homedir': hofx_homedir,
+        'emcpy_homedir': emcpy_homedir,
         'wrkdir': wrkdir,
         'platform': machine,
         'expxmldir': expxmldir,

@@ -24,8 +24,8 @@ shopt -s expand_aliases
 
 #---- get machine and setup runtime environment
 set +eux
-machine=$(detect_host)
-source $gitdir/cfg/platform/$machine/JEDI
+machine=${machine:-$(detect_host)}
+source $gitdir/cfg/platform/$machine/hofxdiag
 export R2D2_CONFIG=$gitdir/cfg/platform/$machine/r2d2_config.yaml
 set -eux
 
@@ -33,7 +33,7 @@ mkdir -p $WORKDIR
 cd $WORKDIR
 
 #---- run genYAML to create YAML file
-export CDATE=2020121500
+export CDATE=${CDATE:-2020121500}
 $gitdir/bin/genYAML diags $EXPDIR $WORKDIR/diags.yaml
 
 #---- run stageJEDI based on configuration

@@ -3,12 +3,14 @@
 #  begdate:  start date
 #  enddate:  end date
 #  hofx_homedir:  path to src directory of hofxcs clone
+#  emcpy_homedir:  path to src directory of emcpy clone
 #  wrkdir:  directory to which cycled output files are written
 #  expxmldir:  directory to which xml file is written
 expname: 'prhofx'
 begdate: '2020121500'
 enddate: '2020121600'
 hofx_homedir: '/work/noaa/da/rtreadon/git/hofxcs/develop/src'  # change to your path
+emcpy_homedir: '/work/noaa/da/rtreadon/git/emcpy/src'          # change to your path
 wrkdir: '/work/noaa/stmp/rtreadon/rocoto'                      # change to your path
 expxmldir: '/work/noaa/da/rtreadon/para_gfs/prhofx'            # change to your path
 #
@@ -56,8 +58,14 @@ bkg_db: ufo_eval_ref
 bkg_dir: $(experiment_dir)/{{cycle}}/RESTART
 bkg_tiles: [1,2,3,4,5,6]
 diag_db: local
+diag_dir: $(experiment_dir)/diags
 window_offset: PT3H
 step_cycle: PT6H
+plot_dir: $(experiment_dir)/plots/{{current_cycle}}
+diag_types:
+- scatter_hofxdiff
+- spatial_gsiomf
+- spatial_ufoomf
 obs_list:
 - $<< $(bundle)/ufo/ewok/jedi-gdas/aircraft.yaml
 - $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_n19.yaml
