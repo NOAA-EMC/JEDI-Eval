@@ -1,7 +1,7 @@
 module purge
 export JEDI_OPT=/scratch1/NCEPDEV/jcsda/jedipara/opt/modules/
 module use $JEDI_OPT/modulefiles/core
-module load jedi/intel-impi/2020.2/ecbuild35
+module load jedi/intel-impi/2020.2
 module use /contrib/miniconda3/modulefiles
 module use /home/Rahul.Mahajan/opt/modulefiles/stack
 module load hpc/1.1.0
@@ -9,7 +9,7 @@ module load hpc-miniconda3/4.5.12
 module load hofx/1.0.0
 
 make_cmd="make -j8"
-#ecbuild_cmd="ecbuild -DMPIEXEC_EXECUTABLE=`which srun` -DMPIEXEC_NUMPROC_FLAG='-n' -DBUILD_PYTHON_BINDINGS=ON -DBUILD_IODA_CONVERTERS=ON"
-ecbuild_cmd="ecbuild -DMPIEXEC_EXECUTABLE=`which srun` -DMPIEXEC_NUMPROC_FLAG='-n'"
+ecbuild_cmd="ecbuild -DMPIEXEC_EXECUTABLE=`which srun` -DMPIEXEC_NUMPROC_FLAG='-n' -DBUILD_PYTHON_BINDINGS=ON"
+#ecbuild_cmd="ecbuild -DMPIEXEC_EXECUTABLE=`which srun` -DMPIEXEC_NUMPROC_FLAG='-n'"
 scheduler="slurm"
 APRUN="srun --export=ALL"
