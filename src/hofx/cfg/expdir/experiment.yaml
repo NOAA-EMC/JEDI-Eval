@@ -42,7 +42,7 @@ npy_ufs: 769
 npz_ufs: $(vertical_resolution)
 ntiles_ufs: 6
 # end what should be computed
-current_dir: $(experiment_dir)/{{current_cycle}}/RESTART
+run_dir: $(experiment_dir)/{{current_cycle}}/RESTART
 account: da-cpu
 obs_dir: $(experiment_dir)/{{cycle}}
 obs_db: ufo_eval_ref
