@@ -39,7 +39,7 @@ class IODAdiagnostic:
         Creates a list of inputted channels as integers from string.
         """
 
-        changroups = channels.split(', ')
+        changroups = [c.strip() for c in channels.split(',')]
         inputchans = []
 
         for c in changroups:
