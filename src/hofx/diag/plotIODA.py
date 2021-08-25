@@ -165,51 +165,75 @@ class IODAdiagnostic:
         """
         eval_types = {
             'hofxdiff': {
-                'domain': 'global',
-                'projection': 'plcarr',
-                'xlabel': 'GSI',
-                'ylabel': 'UFO',
-                'title tag': 'GSI-UFO'
+                'plot opts': {
+                    'domain': 'global',
+                    'projection': 'plcarr',
+                    'xlabel': 'GSI',
+                    'ylabel': 'UFO',
+                    'title tag': 'GSI-UFO'
+                },
+                'plot var': 'diff',
+                'data vars': ['GsiHofXBc', 'hofx']
             },
             'gsiomf': {
-                'domain': 'global',
-                'projection': 'plcarr',
-                'xlabel': 'Obs',
-                'ylabel': 'GSI',
-                'title tag': 'Obs-GSI'
+                'plot opts': {
+                    'domain': 'global',
+                    'projection': 'plcarr',
+                    'xlabel': 'Obs',
+                    'ylabel': 'GSI',
+                    'title tag': 'Obs-GSI'
+                },
+                'plot var': 'diff',
+                'data vars': ['ObsValue', 'GsiHofXBc']
             },
             'ufoomf': {
-                'domain': 'global',
-                'projection': 'plcarr',
-                'xlabel': 'Obs',
-                'ylabel': 'UFO',
-                'title tag': 'Obs-UFO'
+                'plot opts': {
+                    'domain': 'global',
+                    'projection': 'plcarr',
+                    'xlabel': 'Obs',
+                    'ylabel': 'UFO',
+                    'title tag': 'Obs-UFO'
+                },
+                'plot var': 'diff',
+                'data vars': ['ObsValue', 'hofx']
             },
             'gsi': {
-                'domain': 'global',
-                'projection': 'plcarr',
-                'xlabel': 'GSI',
-                'ylabel': None,
-                'title tag': 'GSI'
+                'plot opts': {
+                    'domain': 'global',
+                    'projection': 'plcarr',
+                    'xlabel': 'GSI',
+                    'ylabel': None,
+                    'title tag': 'GSI'
+                },
+                'plot var': 'GsiHofXBc',
+                'data vars': ['GsiHofXBc']
             },
             'ufo': {
-                'domain': 'global',
-                'projection': 'plcarr',
-                'xlabel': 'UFO',
-                'ylabel': None,
-                'title tag': 'UFO'
+                'plot opts': {
+                    'domain': 'global',
+                    'projection': 'plcarr',
+                    'xlabel': 'UFO',
+                    'ylabel': None,
+                    'title tag': 'UFO'
+                },
+                'plot var': 'hofx',
+                'data vars': ['hofx']
             },
             'obs': {
-                'domain': 'global',
-                'projection': 'plcarr',
-                'xlabel': 'Observations',
-                'ylabel': None,
-                'title tag': 'Observations'
+                'plot opts': {
+                    'domain': 'global',
+                    'projection': 'plcarr',
+                    'xlabel': 'Observations',
+                    'ylabel': None,
+                    'title tag': 'Observations'
+                },
+                'plot var': 'ObsValue',
+                'data vars': ['ObsValue']
             }
         }
 
         # Grab plot options and add to metadata
-        plot_opts = eval_types[self.eval_var]
+        plot_opts = eval_types[self.eval_var]['plot opts']
         self.metadata = dict(self.metadata, **plot_opts)
 
         # Get variable specs
@@ -223,8 +247,8 @@ class IODAdiagnostic:
         self.metadata['cmap'] = varspecs.cmap
         self.metadata['label'] = f"{varspecs.name} ({varspecs.units})"
 
-        self.plot_var = 'diff'
-        self.data_vars = ['GsiHofXBc', 'hofx']
+        self.plot_var = eval_types[self.eval_var]['plot var']
+        self.data_vars = eval_types[self.eval_var]['data vars']
 
         if channel:
             self.metadata['title'] = (f"{self.obsname} {self.variable}"
