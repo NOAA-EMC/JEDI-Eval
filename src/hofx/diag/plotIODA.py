@@ -154,7 +154,8 @@ class IODAdiagnostic:
         spec_variable = self.variable.lower().replace('_', ' ')
 
         for key in vardict.keys():
-            spec_variable = key if variable in vardict[key] else variable
+            spec_variable = key if spec_variable in vardict[key] \
+                else spec_variable
 
         return spec_variable
 
