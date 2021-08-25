@@ -242,7 +242,7 @@ class IODAdiagnostic:
         # Get variable specs
         spec_variable = self._varspecs_name()
 
-        etype = 'magnitude' if self.plot_var != 'diff' else self.plotvar
+        etype = 'magnitude' if self.plot_var != 'diff' else self.plot_var
         varspecs = VariableSpecs(variable=spec_variable,
                                  eval_type=etype)
 
