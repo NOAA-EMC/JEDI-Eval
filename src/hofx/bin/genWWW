@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+import click
+import hofx
+import os
+import shutil
+import glob
+import datetime as dt
+from solo.basic_files import mkdir
+
+@click.command()
+@click.argument('yaml', type=click.Path(exists=True))
+def run_gen_www(yaml):
+    """
+    run_gen_www(yaml)
+    generates a self-contained HTML site depending on configuration
+    takes path to YAML file as input
+    """
+    config = hofx.configuration.read_yaml(yaml)
+    web_cfg = config['web']
+    # create clean web directory, remove it if it exists
+    www_dir = web_cfg['www_dir']
+    if os.path.isdir(www_dir):
+        # remove it
+        shutil.rmtree(www_dir)
+    mkdir(www_dir)
+    # get path to root plot directory
+    root_plot_dir = web_cfg['root_plot_dir']
+    # get list of cycles that are available
+    cycles = glob.glob(os.path.join(root_plot_dir,'*'))
+    
+
+
+if __name__ == '__main__':
+    run_gen_www()

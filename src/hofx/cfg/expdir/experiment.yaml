@@ -61,7 +61,10 @@ diag_db: local
 diag_dir: $(experiment_dir)/diags
 window_offset: PT3H
 step_cycle: PT6H
-plot_dir: $(experiment_dir)/plots/{{current_cycle}}
+root_plot_dir: $(experiment_dir)/plots
+plot_dir: $(root_plot_dir)/{{plot_current_cycle}}
+www_dir: $(experiment_dir)/www
+www_tar: true
 diag_types:
 - scatter_hofxdiff
 - spatial_gsiomf

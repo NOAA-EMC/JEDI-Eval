@@ -38,6 +38,7 @@ def gen_yaml(task, expdir, yamlout):
     bg_time = window.background_time(cdate)
     win_details['current_cycle'] = anl_time
     win_details['background_time'] = bg_time
+    win_details['plot_current_cycle'] = dt.datetime.strptime(anl_time, '%Y-%m-%dT%H:%M:%SZ').strftime('%Y%m%d%H')
     win_details['local_current_cycle'] = dt.datetime.strptime(anl_time, '%Y-%m-%dT%H:%M:%SZ').strftime('%Y%m%d.%H%M%S')
     win_details['local_background_time'] = dt.datetime.strptime(anl_time, '%Y-%m-%dT%H:%M:%SZ').strftime('%Y%m%d.%H%M%S')
     # solo does weird things with certain derived types, forcing to strings
