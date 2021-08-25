@@ -236,19 +236,20 @@ class IODAdiagnostic:
         plot_opts = eval_types[self.eval_var]['plot opts']
         self.metadata = dict(self.metadata, **plot_opts)
 
+        self.plot_var = eval_types[self.eval_var]['plot var']
+        self.data_vars = eval_types[self.eval_var]['data vars']
+
         # Get variable specs
         spec_variable = self._varspecs_name()
 
+        etype = 'magnitude' if self.plot_var != 'diff' else self.plotvar
         varspecs = VariableSpecs(variable=spec_variable,
-                                 eval_type='diff')
+                                 eval_type=etype)
 
         self.metadata['vmin'] = varspecs.vmin
         self.metadata['vmax'] = varspecs.vmax
         self.metadata['cmap'] = varspecs.cmap
         self.metadata['label'] = f"{varspecs.name} ({varspecs.units})"
-
-        self.plot_var = eval_types[self.eval_var]['plot var']
-        self.data_vars = eval_types[self.eval_var]['data vars']
 
         if channel:
             self.metadata['title'] = (f"{self.obsname} {self.variable}"
