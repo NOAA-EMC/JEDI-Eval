@@ -256,15 +256,15 @@ class IODAdiagnostic:
                                       f"\nChannel {channel} - "
                                       f"{self.metadata['title tag']}")
 
-            self.metadata['savefile'] = (f"{self.obsname}_{self.variable}_"
-                                         f"channel_{channel}_{self.eval_var}"
-                                         f"_{self.plot_type}")
+            self.metadata['savefile'] = (f"{self.obsname}.{self.variable}_"
+                                         f"channel_{channel}.{self.eval_var}"
+                                         f".{self.plot_type}")
         else:
             self.metadata['title'] = (f"{self.obsname} {self.variable} - "
                                       f"{self.metadata['title tag']}")
 
-            self.metadata['savefile'] = (f"{self.obsname}_{self.variable}_"
-                                         f"{self.eval_var}_{self.plot_type}")
+            self.metadata['savefile'] = (f"{self.obsname}.{self.variable}."
+                                         f"{self.eval_var}.{self.plot_type}")
 
 
 def _mapping(df, diag):
