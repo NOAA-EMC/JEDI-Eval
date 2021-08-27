@@ -45,7 +45,7 @@ function populateMenu(mode){
 //Format URL to the requested domain, variable, run & frame
 function getURL1(channel,validtime,plottype){
 	var newurl = url1.replace("NNN",channel);
-	newurl = newurl.replace("CCC",cycle);
+	newurl = newurl.replace("CCC",validtime);
   newurl = newurl.replace("PPP",plottype);
 	return newurl;
 }
