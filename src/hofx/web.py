@@ -1,9 +1,9 @@
 import os
 import glob
 import shutil
-#import hofx
+import hofx
 
-oz_all = ['omps_npp', 'omi_aura', 'ompstc8_npp']
+oz_all = ['omps_npp', 'omi_aura', 'ompstc8_npp', 'ompsnp_npp']
 
 def get_obs_lists(plot_dir):
     # search plot_dir and determine all unique instruments/ob types
@@ -16,13 +16,17 @@ def get_obs_lists(plot_dir):
     rad_list = []
     oz_list = []
     for ob in all_obs:
-        if '_' not in ob:
+        if '_' not in ob or ob == 'rass_tv':
             conv_list.append(ob)
         else:
             if ob not in oz_all:
                 rad_list.append(ob)
             else:
                 oz_list.append(ob)
+    # sort everything
+    conv_list = sorted(conv_list)
+    rad_list = sorted(rad_list)
+    oz_list = sorted(oz_list)
     return conv_list, rad_list, oz_list
 
 
@@ -52,7 +56,7 @@ def gen_root_index(www_dir, template_dir, expname,
             '{{OZLIST}}': oz_html,
             '{{CONTENTHTML}}': 'main.html',
             '{{HOMEPATH}}': '',
-            '{{PANELH}}': '700px',
+            '{{PANELH}}': '900px',
         }
         outfile = os.path.join(www_dir, 'index.html')
         with open(outfile, 'w') as htmlout:
@@ -87,7 +91,7 @@ def gen_sensor_index(htmlfile, templatefile, expname, mysensor,
             '{{OZLIST}}': oz_html,
             '{{CONTENTHTML}}': f'{mysensor}.html',
             '{{HOMEPATH}}': '../../index.html',
-            '{{PANELH}}': '700px',
+            '{{PANELH}}': '900px',
         }
         with open(htmlfile, 'w') as htmlout:
             for line in htmlin:
@@ -185,8 +189,7 @@ def gen_site(www_dir, plot_dirs, expname):
     # expname - string name of experiment
 
     # determine location of HTML template files
-    #template_dir = os.path.join(hofx.hofx_directory, 'cfg', 'templates', 'www')
-    template_dir = os.path.join('/Users/corymartin/Documents/GitHub/hofxcs/src/hofx', 'cfg', 'templates', 'www')
+    template_dir = os.path.join(hofx.hofx_directory, 'cfg', 'templates', 'www')
 
     # get list of cycles
     cycles = [os.path.basename(c) for c in plot_dirs]
