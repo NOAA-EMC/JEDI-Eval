@@ -26,8 +26,9 @@ def run_gen_www(yaml):
     # get path to root plot directory
     root_plot_dir = web_cfg['root_plot_dir']
     # get list of cycles that are available
-    cycles = glob.glob(os.path.join(root_plot_dir,'*'))
-    
+    plot_dirs = glob.glob(os.path.join(root_plot_dir,'*'))
+    # call function to create website
+    hofx.web.gen_site(www_dir, plot_dirs, web_cfg['experiment'])
 
 
 if __name__ == '__main__':
