@@ -18,6 +18,8 @@ def run_plot(yaml):
     plot_types = plot_cfg['types']
     # get list of observations
     ob_list = plot_cfg['diags']['observations']
+    # cycle
+    cycle = plot_cfg['cycle']
     # diag dir
     diag_dir = plot_cfg['diags']['diag_dir']
     # plot output dir
@@ -32,7 +34,7 @@ def run_plot(yaml):
         ob['diag_dir'] = diag_dir
         for var in var_list:
             for plot in plot_types:
-                hofx.diag.plotIODA.gen_diagnostics(ob, var, plot, plot_dir)        
+                hofx.diag.plotIODA.gen_diagnostics(ob, var, cycle, plot, plot_dir)        
 
 
 if __name__ == '__main__':
