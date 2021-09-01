@@ -6,6 +6,7 @@
 #  emcpy_homedir:  path to src directory of emcpy clone
 #  wrkdir:  directory to which cycled output files are written
 #  expxmldir:  directory to which xml file is written
+#  keepdata:  retain (yes) or remove (no) directories/files in wrkdir upon completion of each cycle
 expname: 'prhofx'
 begdate: '2020121500'
 enddate: '2020121600'
@@ -13,6 +14,7 @@ hofx_homedir: '/work/noaa/da/rtreadon/git/hofxcs/develop/src'  # change to your 
 emcpy_homedir: '/work/noaa/da/rtreadon/git/emcpy/src'          # change to your path
 wrkdir: '/work/noaa/stmp/rtreadon/rocoto'                      # change to your path
 expxmldir: '/work/noaa/da/rtreadon/para_gfs/prhofx'            # change to your path
+keepdata: 'no'       
 #
 # Set bundle and jedi_bundle dpending on machine
 ##bundle: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/bundle
@@ -68,4 +70,35 @@ diag_types:
 - spatial_ufoomf
 obs_list:
 - $<< $(bundle)/ufo/ewok/jedi-gdas/aircraft.yaml
+#- $<< $(bundle)/ufo/ewok/jedi-gdas/airs_aqua.yaml       # not available for test period
+#- $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_aqua.yaml      # not available for test period
+- $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_metop-a.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_metop-b.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_metop-c.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_n15.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_n18.yaml
 - $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_n19.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/atms_n20.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/atms_npp.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/avhrr3_metop-a.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/avhrr3_n18.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/cris-fsr_n20.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/cris-fsr_npp.yaml
+#- $<< $(bundle)/ufo/ewok/jedi-gdas/gnssrobndnbam.yaml   # not available for test period
+- $<< $(bundle)/ufo/ewok/jedi-gdas/iasi_metop-a.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/iasi_metop-b.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/mhs_metop-b.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/mhs_metop-c.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/mhs_n19.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/omi_aura.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/ompsnp_npp.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/ompstc8_npp.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/rass_tv.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/satwind.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/scatwind.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/seviri_m11.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/sfc.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/sfcship.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/sondes.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/ssmis_f17.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/vadwind.yaml
