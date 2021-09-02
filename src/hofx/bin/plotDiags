@@ -18,7 +18,7 @@ def run_plot(yaml):
     plot_types = plot_cfg['types']
     # get list of observations
     ob_list = plot_cfg['diags']['observations']
-    # cycle 
+    # cycle
     cycle = plot_cfg['cycle']
     # diag dir
     diag_dir = plot_cfg['diags']['diag_dir']
