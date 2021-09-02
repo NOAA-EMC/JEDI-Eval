@@ -22,6 +22,9 @@ def run_plot(yaml):
     cycle = plot_cfg['cycle']
     # diag dir
     diag_dir = plot_cfg['diags']['diag_dir']
+    # stats output dir
+    stats_dir = plot_cfg['stats_dir']
+    mkdir(stats_dir)
     # plot output dir
     plot_dir = plot_cfg['plot_dir']
     mkdir(plot_dir)
