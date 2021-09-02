@@ -320,7 +320,6 @@ def gen_statistics(ob_dict, variable, cycle, outdir='./'):
         # Radiance data
         if diag.str_channels:
             # Grabs channels
-            print('in radiance')
             inputchans = diag.get_input_channels(diag.str_channels)
 
             df = diag.create_stats_df(obsspace, data_type=d,
