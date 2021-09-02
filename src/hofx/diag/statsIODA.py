@@ -126,10 +126,13 @@ class IODAstatistics:
 
         # GSI use flag (radiance only) and obs_type (conventional)
         if self.variable in ['brightness_temperature',
-                             'integrated layer ozone in air']:
-
-            gsi_use_flag = self._get_data(obsspace,
-                                          variable=f"VarMetaData/gsi_use_flag")
+                             'integrated_layer_ozone_in_air']:
+            try:
+                gsi_use_flag = self._get_data(obsspace,
+                                              variable=f"VarMetaData/gsi_use_flag")
+            except RuntimeError:
+                gsi_use_flag = self._get_data(obsspace,
+                                              variable=f"GsiUseFlag/{self.variable}")
             obs_type = None
 
         else:
@@ -157,14 +160,14 @@ class IODAstatistics:
                 'omf': gsiBC_omf,
                 'obs_type': obs_type
             },
+            # THIS NEEDS TO BE CHANGED WHEN
+            # HOFX PreBC DATA IS ADDED
             'UFO': {
                 'hofx': ufo_data,
                 'eff_qc': ufo_eff_qc,
                 'omf': ufo_omf,
                 'obs_type': obs_type
             },
-            # THIS NEEDS TO BE CHANGED WHEN
-            # HOFX BC DATA IS ADDED
             'UFO BC': {
                 'hofx': ufo_data,
                 'eff_qc': ufo_eff_qc,
@@ -178,7 +181,7 @@ class IODAstatistics:
 
     def _return_data(self, data_type, chanIndex=None, obstypeIndex=None):
         """
-        Returns properly indexed hofx, omf, and qc data.
+        Returns proper hofx, omf, and qc'd data.
         """
 
         if data_type in ['UFO', 'UFO BC']:
@@ -190,7 +193,7 @@ class IODAstatistics:
                     self.data[data_type]['eff_qc'][:, chanIndex] == 0)
                 qc_data = data[qc_indx]
                 qc_omf = self.data['Obs'][:, chanIndex][qc_indx] - qc_data
-            else:
+            elif obstypeIndex:
                 # Conventional data
                 data = self.data[data_type]['hofx'][obstypeIndex]
                 omf = self.data[data_type]['omf'][obstypeIndex]
@@ -198,6 +201,14 @@ class IODAstatistics:
                     self.data[data_type]['eff_qc'][obstypeIndex] == 0)
                 qc_data = data[qc_indx]
                 qc_omf = self.data['Obs'][obstypeIndex][qc_indx] - qc_data
+            else:
+                # Ozone
+                data = self.data[data_type]['hofx']
+                omf = self.data[data_type]['omf']
+                qc_indx = np.where(self.data[data_type]['eff_qc'] == 0)
+                qc_data = data[qc_indx]
+                qc_omf = self.data['Obs'][qc_indx] - qc_data
+                
 
         elif data_type in ['GSI', 'GSI BC']:
             if chanIndex:
@@ -214,7 +225,7 @@ class IODAstatistics:
                     qc_data = []
                     qc_omf = []
 
-            else:
+            elif obstypeIndex:
                 # Conventional data
                 data = self.data[data_type]['hofx'][obstypeIndex]
                 omf = self.data[data_type]['omf'][obstypeIndex]
@@ -222,6 +233,14 @@ class IODAstatistics:
                     self.data[data_type]['error'][obstypeIndex] < 1e6)
                 qc_data = data[qc_indx]
                 qc_omf = self.data['Obs'][obstypeIndex][qc_indx] - qc_data
+
+            else:
+                # Ozone data
+                data = self.data[data_type]['hofx']
+                omf = self.data[data_type]['omf']
+                qc_indx = np.where(self.data[data_type]['error'] < 1e6)
+                qc_data = data[qc_indx]
+                qc_omf = self.data['Obs'][qc_indx] - qc_data
 
         return data, omf, qc_data, qc_omf
 
@@ -262,6 +281,32 @@ class IODAstatistics:
                 qc_omf_stats = self._statistics(qc_omf)
                 df_dict[key][f'{data_type} qc omf bias'] = qc_omf_stats.bias
                 df_dict[key][f'{data_type} qc omf rmse'] = qc_omf_stats.rmse
+
+            df = pd.DataFrame(df_dict).transpose()
+
+        # Ozone
+        elif self.variable in ['integrated_layer_ozone_in_air']:
+            df_dict['Ozone'] = {}
+
+            hofx, omf, qc_hofx, qc_omf = self._return_data(data_type)
+
+            # Get n of hofx data
+            hofx_stats = self._statistics(hofx)
+            df_dict['Ozone'][f'{data_type} count'] = hofx_stats.n
+
+            # Bias and RMSE of omf
+            omf_stats = self._statistics(omf)
+            df_dict['Ozone'][f'{data_type} omf bias'] = omf_stats.bias
+            df_dict['Ozone'][f'{data_type} omf rmse'] = omf_stats.rmse
+
+            # Get n of qc hofx
+            qc_hofx_stats = self._statistics(qc_hofx)
+            df_dict['Ozone'][f'{data_type} qc count'] = qc_hofx_stats.n
+
+            # Bias and RMSE of qc omf
+            qc_omf_stats = self._statistics(qc_omf)
+            df_dict['Ozone'][f'{data_type} qc omf bias'] = qc_omf_stats.bias
+            df_dict['Ozone'][f'{data_type} qc omf rmse'] = qc_omf_stats.rmse
 
             df = pd.DataFrame(df_dict).transpose()
 
@@ -332,13 +377,17 @@ def gen_statistics(ob_dict, variable, cycle, outdir='./'):
             df = diag.create_stats_df(obsspace, data_type=d)
             df_list.append(df)
 
-    df = pd.concat(df_list, axis=1)
+        # Ozone data
+        else:
+            df = diag.create_stats_df(obsspace, data_type=d)
 
-    if diag.variable in ['brightness_temperature',
-                         'integrated layer ozone in air']:
+    if diag.variable in ['brightness_temperature']:
+        df = pd.concat(df_list, axis=1)
         df = df.reset_index().rename(columns={'index': 'Channels'})
-
+    elif diag.variable in ['integrated_layer_ozone_in_air']:
+        df = df.reset_index().rename(columns={'index': 'Ozone'})
     else:
+        df = pd.concat(df_list, axis=1)
         df = df.reset_index().rename(columns={'index': 'Obs Type'})
 
     # Save to csv file
