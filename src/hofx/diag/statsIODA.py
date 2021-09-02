@@ -1,22 +1,39 @@
+from netCDF4 import Dataset
+import sys
+import numpy as np
+import pandas as pd
+import os
+import ioda
+
+
 class IODAstatistics:
 
-    def __init__(self, ob_dict, variable, outdir):
-        # body of the constructor
+    def __init__(self, ob_dict, variable, cycle, outdir):
+        """
+        Body of the constructor that saves some file sensative
+        metadata.
+
+        Args:
+            ob_dict : (dict) observation dictionary from input yaml file
+            variable : (str) variable name
+            cycle : (str) cycle time
+            outdir : (str) path to where stats will be saved
+        """
 
         obsspace = ob_dict['obs space']
         self.obsname = obsspace['name']
         self.obsfile = os.path.basename(obsspace['obsdataout']['obsfile'])
         self.obspath = os.path.join(ob_dict['diag_dir'], self.obsfile)
-        self.cycle = self.obsfile.split('/')[-1].split('.')[-2]
+        self.cycle = cycle
         self.str_channels = obsspace['channels'] if 'channels' in \
             obsspace else None
 
         self.variable = variable
-        self.outfig = outdir
+        self.outdig = outdir
 
         self.metadata = {'obs name': self.obsname,
                          'cycle': self.cycle,
-                         'outfig': self.outfig}
+                         'outdir': self.outdir}
 
     def get_input_channels(self, channels):
         """
@@ -74,32 +91,36 @@ class IODAstatistics:
         OUT.n = len(data)
         if OUT.n != 0:
             OUT.bias = np.around(np.nanmean(data), decimals=4)
-            OUT.rmse = np.around(np.sqrt(np.nanmean(np.square(data))), decimals=4)
+            OUT.rmse = np.around(np.sqrt(np.nanmean(np.square(data))),
+                                 decimals=4)
         else:
             OUT.bias = np.nan
             OUT.rmse = np.nan
 
         return OUT
 
-    def create_stats_df(self, channels=None):
-        """
-        Creates a dataframe of stats for GSI and UFO omf information.
-        The stats include n, bias, and rmse.
-        """
-        df_dict = {}
+    def extract_data(self, obsspace):
 
         # GSI data
-        gsi_data = self._get_data(obsspace, variable=f"GsiHofX/{self.variable}")
-        gsiBC_data = self._get_data(obsspace, variable=f"GsiHofXBc/{self.variable}")
-        gsi_error = self._get_data(obsspace, variable=f"GsiFinalObsError/{self.variable}")
-        gsi_use_flag = self._get_data(obsspace, variable=f"VarMetaData/gsi_use_flag")
+        gsi_data = self._get_data(obsspace,
+                                  variable=f"GsiHofX/{self.variable}")
+        gsiBC_data = self._get_data(obsspace,
+                                    variable=f"GsiHofXBc/{self.variable}")
+        gsi_error = self._get_data(obsspace,
+                                   variable=("GsiFinalObsError/"
+                                             f"{self.variable}"))
+        gsi_use_flag = self._get_data(obsspace,
+                                      variable=f"VarMetaData/gsi_use_flag")
 
         # UFO data
-        ufo_data = self._get_data(obsspace, variable=f"hofx/{self.variable}")
-        ufo_eff_qc = self._get_data(obsspace, variable=f"EffectiveQC/{self.variable}")
+        ufo_data = self._get_data(obsspace,
+                                  variable=f"hofx/{self.variable}")
+        ufo_eff_qc = self._get_data(obsspace,
+                                    variable=f"EffectiveQC/{self.variable}")
 
         # Obs data
-        obs_data = self._get_data(obsspace, variable=f"ObsValue/{self.variable}")
+        obs_data = self._get_data(obsspace,
+                                  variable=f"ObsValue/{self.variable}")
         obs_data[np.abs(obs_data) > 1e6] = np.nan
 
         # OmF data
@@ -107,98 +128,151 @@ class IODAstatistics:
         gsiBC_omf = obs_data-gsiBC_data
         ufo_omf = obs_data-ufo_data
 
-        # Loop through channels
-        for chan in channels:
-            df_dict[f'Channel {chan}'] = {}
-
-            # Gets proper indexed channel
-            chanCoords = self._get_indexed_channels(obsspace)
-            chanIndex = chanCoords.index(chan)
-
-            # GSI QC'd data
-            gsi_qc_data = gsi_data[:, chanIndex][np.where(np.abs(gsi_error[:, chanIndex]) < 1e6)]
-            gsiBC_qc_data = gsiBC_data[:, chanIndex][np.where(np.abs(gsi_error[:, chanIndex]) < 1e6)]
-
-            # UFO QC'd data
-            ufo_qc_data = ufo_data[:, chanIndex][np.where(ufo_eff_qc[:, chanIndex] == 0)]
-
-            # QC'd omf data - need to index obs correctly to make sure len is same
-            ufo_qc_omf = obs[:, chanIndex][np.where(ufo_eff_qc[:, chanIndex] == 0)] - ufo_qc_data
-            gsi_qc_omf = obs[:, chanIndex][np.where(np.abs(gsi_error[:, chanIndex]) < 1e6)] - gsi_qc_data
-            gsiBC_qc_omf = obs[:, chanIndex][np.where(np.abs(gsi_error[:, chanIndex]) < 1e6)] - gsiBC_qc_data
-
-            # sets non assimilated data empty arrays for gsi
-            if gsi_use_flag[chanIndex] != 1:
-                gsi_qc_data = []
-                gsiBC_qc_data = []
-                gsi_qc_omf = []
-                gsiBC_qc_omf = []
-
-            # Get n of regular data
-            ufo_stats = self._statistics(ufo_data[:, chanIndex])
-            gsi_stats = self._statistics(gsi_data[:, chanIndex])
-            gsiBC_stats = self._statistics(gsiBC_data[:, chanIndex])
-
-            df_dict[f'Channel {chan}']['UFO count'] = ufo_stats.n
-            df_dict[f'Channel {chan}']['GSI count'] = gsi_stats.n
-            df_dict[f'Channel {chan}']['GSI BC count'] = gsiBC_stats.n
-
-            # Bias and RMSE of regular omf
-            ufo_omf_stats = self._statistics(ufo_omf[:, chanIndex])
-            gsi_omf_stats = self._statistics(gsi_omf[:, chanIndex])
-            gsiBC_omf_stats = self._statistics(gsiBC_omf[:, chanIndex])
-
-            df_dict[f'Channel {chan}']['UFO omf bias'] = ufo_omf_stats.bias
-            df_dict[f'Channel {chan}']['GSI omf bias'] = gsi_omf_stats.bias
-            df_dict[f'Channel {chan}']['GSI BC omf bias'] = gsiBC_omf_stats.bias
-
-            df_dict[f'Channel {chan}']['UFO omf rmse'] = ufo_omf_stats.rmse
-            df_dict[f'Channel {chan}']['GSI omf rmse'] = gsi_omf_stats.rmse
-            df_dict[f'Channel {chan}']['GSI BC omf rmse'] = gsiBC_omf_stats.rmse
-
-            # Get n of qc data
-            ufo_qc_stats = self._statistics(ufo_qc_data)
-            gsi_qc_stats = self._statistics(gsi_qc_data)
-            gsiBC_qc_stats = self._statistics(gsiBC_qc_data)
-
-            df_dict[f'Channel {chan}']['UFO qc count'] = ufo_qc_stats.n
-            df_dict[f'Channel {chan}']['GSI qc count'] = gsi_qc_stats.n
-            df_dict[f'Channel {chan}']['GSI BC qc count'] = gsiBC_qc_stats.n
-
-            # Bias and RMSE of regular omf
-            ufo_qc_omf_stats = self._statistics(ufo_qc_omf)
-            gsi_qc_omf_stats = self._statistics(gsi_qc_omf)
-            gsiBC_qc_omf_stats = self._statistics(gsiBC_qc_omf)
-
-            df_dict[f'Channel {chan}']['UFO qc omf bias'] = ufo_qc_omf_stats.bias
-            df_dict[f'Channel {chan}']['GSI qc omf bias'] = gsi_qc_omf_stats.bias
-            df_dict[f'Channel {chan}']['GSI BC qc omf bias'] = gsiBC_qc_omf_stats.bias
-
-            df_dict[f'Channel {chan}']['UFO qc omf rmse'] = ufo_qc_omf_stats.rmse
-            df_dict[f'Channel {chan}']['GSI qc omf rmse'] = gsi_qc_omf_stats.rmse
-            df_dict[f'Channel {chan}']['GSI BC qc omf rmse'] = gsiBC_qc_omf_stats.rmse
-
-        df = pd.DataFrame(df_dict).transpose().reset_index()
-        df = df.rename(columns={'index': 'Channels'})
+        self.data = {
+            'GSI': {
+                'hofx': gsi_data,
+                'error': gsi_error,
+                'use_flag': gsi_use_flag,
+                'omf': gsi_omf
+            },
+            'GSI BC': {
+                'hofx': gsiBC_data,
+                'error': gsi_error,
+                'use_flag': gsi_use_flag,
+                'omf': gsiBC_omf
+            },
+            'UFO': {
+                'hofx': ufo_data,
+                'eff_qc': ufo_eff_qc,
+                'omf': ufo_omf
+            },
+            # THIS NEEDS TO BE CHANGED WHEN
+            # HOFX BC DATA IS ADDED
+            'UFO BC': {
+                'hofx': ufo_data,
+                'eff_qc': ufo_eff_qc,
+                'omf': ufo_omf
+            },
+            'Obs': obs_data
+        }
 
         return
 
+    def _return_data(self, data_type, chanIndex=None):
+        """
+        Returns proper hofx, omf, and qc'd data.
+        """
+        if data_type in ['UFO', 'UFO BC']:
+            if chanIndex:
+                # Radiance data
+                data = self.data[data_type]['hofx'][:, chanIndex]
+                omf = self.data[data_type]['omf'][:, chanIndex]
+                qc_indx = np.where(
+                    self.data[data_type]['eff_qc'][:, chanIndex] == 0)
+                qc_data = data[qc_indx]
+                qc_omf = self.data['Obs'][:, chanIndex][qc_indx] - qc_data
+            else:
+                # Conventional data
+                data = self.data[data_type]['hofx']
+                omf = self.data[data_type]['omf']
+                qc_indx = np.where(self.data[data_type]['eff_qc'] == 0)
+                qc_data = data[qc_indx]
+                qc_omf = self.data['Obs'][qc_indx] - qc_data
 
-def gen_statistics(ob_dict, variable, outdir='./'):
+        elif data_type in ['GSI', 'GSI BC']:
+            if chanIndex:
+                # Radiance data
+                data = self.data[data_type]['hofx'][:, chanIndex]
+                omf = self.data[data_type]['omf'][:, chanIndex]
+                qc_indx = np.where(
+                    self.data[data_type]['error'][:, chanIndex] < 1e6)
+                qc_data = data[qc_indx]
+                qc_omf = self.data['Obs'][:, chanIndex][qc_indx] - qc_data
+
+                # sets non assimilated data empty arrays for gsi
+                if self.data[data_type]['use_flag'][chanIndex] != 1:
+                    qc_data = []
+                    qc_omf = []
+
+            else:
+                # Conventional data
+                data = self.data[data_type]['hofx']
+                omf = self.data[data_type]['omf']
+                qc_indx = np.where(self.data[data_type]['error'] < 1e6)
+                qc_data = data[qc_indx]
+                qc_omf = self.data['Obs'][qc_indx] - qc_data
+
+        return data, omf, qc_data, qc_omf
+
+    def create_stats_df(self, obsspace, data_type, channels=None):
+        """
+        Creates a dataframe of stats for GSI and UFO omf information.
+        The stats include n, bias, and rmse.
+        """
+        df_dict = {}
+
+        if channels:
+            for chan in channels:
+                key = f'Channel {chan}'
+                df_dict[key] = {}
+
+                # Gets proper indexed channel
+                chanCoords = self._get_indexed_channels(obsspace)
+                chanIndex = chanCoords.index(chan)
+
+                hofx, omf, qc_hofx, qc_omf = self._return_data(data_type,
+                                                               chanIndex)
+
+                # Get n of hofx data
+                hofx_stats = self._statistics(hofx)
+                df_dict[key][f'{data_type} count'] = hofx_stats.n
+
+                # Bias and RMSE of omf
+                omf_stats = self._statistics(omf)
+                df_dict[key][f'{data_type} omf bias'] = omf_stats.bias
+                df_dict[key][f'{data_type} omf rmse'] = omf_stats.rmse
+
+                # Get n of qc hofx
+                qc_hofx_stats = self._statistics(qc_hofx)
+                df_dict[key][f'{data_type} qc count'] = qc_hofx_stats.n
+
+                # Bias and RMSE of qc omf
+                qc_omf_stats = self._statistics(qc_omf)
+                df_dict[key][f'{data_type} qc omf bias'] = qc_omf_stats.bias
+                df_dict[key][f'{data_type} qc omf rmse'] = qc_omf_stats.rmse
+
+            df = pd.DataFrame(df_dict).transpose()
+
+        return df
+
+
+def gen_statistics(ob_dict, variable, cycle, outdir='./'):
 
     # Creates object
-    diag = IODAstatistics(ob_dict, variable, outdir)
+    diag = IODAstatistics(ob_dict, variable, cycle, outdir)
 
     # Gets obspace
     obsspace = ioda.ObsSpace(diag.obspath)
 
-    # If yaml includes channels, will do radiance things
-    if diag.str_channels:
-        # Grabs channels
-        inputchans = diag.get_input_channels(diag.str_channels)
+    # extract data
+    diag.extract_data(obsspace)
 
-        df = diag.create_stats_df(channels=inputchans)
+    df_list = []
 
-    df.to_csv(f'{diag.obsname}.{diag.variable}.{diag.cycle}.stats')
+    for d in ['UFO', 'UFO BC', 'GSI', 'GSI BC']:
+        # Radiance data
+        if diag.str_channels:
+            # Grabs channels
+            inputchans = diag.get_input_channels(diag.str_channels)
+
+            df = diag.create_stats_df(obsspace, data_type=d,
+                                      channels=inputchans)
+            df_list.append(df)
+
+    df = pd.concat(df_list, axis=1)
+    df = df.reset_index().rename(columns={'index': 'Channels'})
+
+    df.to_csv((f'{diag.outdir}/{diag.obsname}.{diag.variable}.'
+               f'{diag.cycle}.stats'))
 
     return
