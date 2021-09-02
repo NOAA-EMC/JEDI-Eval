@@ -15,14 +15,14 @@ __all__ = ['gen_diagnostics']
 
 class IODAdiagnostic:
 
-    def __init__(self, ob_dict, variable, plot_type, plot_dir):
+    def __init__(self, ob_dict, variable, cycle, plot_type, plot_dir):
         # body of the constructor
 
         obsspace = ob_dict['obs space']
         self.obsname = obsspace['name']
         self.obsfile = os.path.basename(obsspace['obsdataout']['obsfile'])
         self.obspath = os.path.join(ob_dict['diag_dir'], self.obsfile)
-        self.cycle = self.obsfile.split('/')[-1].split('.')[-2]
+        self.cycle = cycle
         self.str_channels = obsspace['channels'] if 'channels' in \
             obsspace else None
 
@@ -355,7 +355,7 @@ def _query_plot_type(df, diag):
     return fig
 
 
-def gen_diagnostics(ob_dict, variable, plot_type, plot_dir='./'):
+def gen_diagnostics(ob_dict, variable, cycle, plot_type, plot_dir='./'):
     """
     Driver function to grab metadata, create a dataframe, and generate
     diagnostics from a yaml input.
@@ -368,7 +368,7 @@ def gen_diagnostics(ob_dict, variable, plot_type, plot_dir='./'):
     """
 
     # Creates object
-    diag = IODAdiagnostic(ob_dict, variable, plot_type, plot_dir)
+    diag = IODAdiagnostic(ob_dict, variable, cycle, plot_type, plot_dir)
 
     # Gets obspace
     obsspace = ioda.ObsSpace(diag.obspath)
