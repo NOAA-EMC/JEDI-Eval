@@ -36,7 +36,7 @@ def run_plot(yaml):
         var_list = ob['obs space']['simulated variables']
         ob['diag_dir'] = diag_dir
         for var in var_list:
-            hofx.diag.plotIODA.gen_diagnostics(ob, var, cycle, stats_dir)
+            hofx.diag.statsIODA.gen_statistics(ob, var, cycle, stats_dir)
             for plot in plot_types:
                 hofx.diag.plotIODA.gen_diagnostics(ob, var, cycle, plot, plot_dir)        
 
