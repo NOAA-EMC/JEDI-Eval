@@ -4,6 +4,6 @@ set -eux
 
 export PYTHONPATH=$HOFX_HOMEDIR
 
-$HOFX_HOMEDIR/hofx/scripts/stage.sh $HOFX_HOMEDIR/hofx/cfg/expdir $ROTDIR/hofx_tmp
+$HOFX_HOMEDIR/hofx/scripts/stage.sh $HOFX_HOMEDIR/hofx/cfg/expdir $ROTDIR/hofx_tmp/$CDATE
 rc=$?
 exit $rc

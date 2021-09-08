@@ -24,6 +24,7 @@
 	<!-- Work directory -->
         <!ENTITY WRKDIR "wrkdir">
 	<!ENTITY ROTDIR "&WRKDIR;/&PSLOT;">
+        <!ENTITY KEEPDATA "keepdata">
 
         <!-- HOFX and EMCPY directories -->
         <!ENTITY HOFX_HOMEDIR "hofx_homedir">
@@ -45,14 +46,14 @@
 
 	<!ENTITY QUEUE_STAGE_GDAS     "&QUEUE;">
 	<!ENTITY PARTITION_STAGE_GDAS "&PARTITION_BATCH;">
-	<!ENTITY WALLTIME_STAGE_GDAS  "00:15:00">
+	<!ENTITY WALLTIME_STAGE_GDAS  "00:30:00">
 	<!ENTITY RESOURCES_STAGE_GDAS "<nodes>1:ppn=1:tpp=1</nodes>">
 	<!ENTITY NATIVE_STAGE_GDAS    "--export=NONE">
 
 	<!ENTITY QUEUE_HOFX_GDAS     "&QUEUE;">
 	<!ENTITY PARTITION_HOFX_GDAS "&PARTITION_BATCH;">
-	<!ENTITY WALLTIME_HOFX_GDAS  "00:30:00">
-	<!ENTITY RESOURCES_HOFX_GDAS "<nodes>8:ppn=3:tpp=1</nodes>">
+	<!ENTITY WALLTIME_HOFX_GDAS  "01:00:00">
+	<!ENTITY RESOURCES_HOFX_GDAS "<nodes>2:ppn=12:tpp=1</nodes>">
 	<!ENTITY NATIVE_HOFX_GDAS    "--export=NONE">
 
 	<!ENTITY QUEUE_MERGE_GDAS     "&QUEUE;">
@@ -69,7 +70,7 @@
 
 	<!ENTITY QUEUE_DIAGS_GDAS     "&QUEUE;">
 	<!ENTITY PARTITION_DIAGS_GDAS "&PARTITION_BATCH;">
-	<!ENTITY WALLTIME_DIAGS_GDAS  "00:15:00">
+	<!ENTITY WALLTIME_DIAGS_GDAS  "01:15:00">
 	<!ENTITY RESOURCES_DIAGS_GDAS "<nodes>1:ppn=1:tpp=1</nodes>">
 	<!ENTITY NATIVE_DIAGS_GDAS    "--export=NONE">
 
@@ -195,6 +196,7 @@
         <envar><name>machine</name><value>&machine;</value></envar>
         <envar><name>HOFX_HOMEDIR</name><value>&HOFX_HOMEDIR;</value></envar>
         <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
+        <envar><name>KEEPDATA</name><value>&KEEPDATA;</value></envar>
 	<envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
 
 	<dependency>
@@ -226,6 +228,7 @@
         <envar><name>HOFX_HOMEDIR</name><value>&HOFX_HOMEDIR;</value></envar>
         <envar><name>EMCPY_HOMEDIR</name><value>&EMCPY_HOMEDIR;</value></envar>
         <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
+        <envar><name>KEEPDATA</name><value>&KEEPDATA;</value></envar>
 	<envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
 
 	<dependency>
