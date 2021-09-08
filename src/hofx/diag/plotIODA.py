@@ -175,6 +175,17 @@ class IODAdiagnostic:
                 'plot var': 'diff',
                 'data vars': ['GsiHofXBc', 'hofx']
             },
+            'hofxbias': {
+                'plot opts': {
+                    'domain': 'global',
+                    'projection': 'plcarr',
+                    'xlabel': 'GSI',
+                    'ylabel': 'GSI-UFO',
+                    'title tag': 'HofX Bias'
+                },
+                'plot var': 'diff',
+                'data vars': ['GsiHofXBc', 'hofx']
+            },
             'gsiomf': {
                 'plot opts': {
                     'domain': 'global',
@@ -275,11 +286,8 @@ def _mapping(df, diag):
     domain = Domain(diag.metadata['domain'])
     proj = MapProjection(diag.metadata['projection'])
 
-    # Create figure
-    fig = plt.figure(figsize=(12, 8))
-
     # Generate map and add map features
-    mymap = CreateMap(fig=fig, domain=domain, proj_obj=proj)
+    mymap = CreateMap(figsize=(12, 8), domain=domain, proj_obj=proj)
     mymap.add_features(['coastlines'])
 
     # Generate data to plot and set attributes
@@ -316,8 +324,16 @@ def _scatter(df, diag):
     Generate scatter plot using emcpy.
     """
     # Generate scatter object and add linear regression
-    plotobj = Scatter(df[f"{diag.data_vars[0]}/{diag.variable}"].to_numpy(),
-                      df[f"{diag.data_vars[-1]}/{diag.variable}"].to_numpy())
+    if diag.eval_var in ['hofxbias']:
+        # hofxbias is very particular eval type. It requires
+        # GSI on x axis and GSI-UFO on y axis
+        plotobj = Scatter(
+            df[f"{diag.data_vars[0]}/{diag.variable}"].to_numpy(),
+            df[f"{diag.plot_var}/{diag.variable}"].to_numpy())
+    else:
+        plotobj = Scatter(
+            df[f"{diag.data_vars[0]}/{diag.variable}"].to_numpy(),
+            df[f"{diag.data_vars[-1]}/{diag.variable}"].to_numpy())
     plotobj.add_linear_regression()
 
     # Generate plot and draw data
