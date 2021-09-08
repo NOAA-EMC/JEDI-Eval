@@ -13,7 +13,6 @@ if [[ $KEEPDATA = "NO" ]]; then
     string=`grep "window begin" $ROTDIR/hofx_tmp/$CDATE/diags.yaml | cut -d "'" -f2-2 | head -1`
     RMFILES=$ROTDIR/diags/*${string}.nc4
     rm -rf $RMFILES
-#   rm -r $ROTDIR/hofx_tmp/$CDATE
 fi
 
 exit $rc
