@@ -18,8 +18,13 @@ def run_plot(yaml):
     plot_types = plot_cfg['types']
     # get list of observations
     ob_list = plot_cfg['diags']['observations']
+    # cycle
+    cycle = plot_cfg['cycle']
     # diag dir
     diag_dir = plot_cfg['diags']['diag_dir']
+    # stats output dir
+    stats_dir = plot_cfg['stats_dir']
+    mkdir(stats_dir)
     # plot output dir
     plot_dir = plot_cfg['plot_dir']
     mkdir(plot_dir)
@@ -31,8 +36,9 @@ def run_plot(yaml):
         var_list = ob['obs space']['simulated variables']
         ob['diag_dir'] = diag_dir
         for var in var_list:
+            hofx.diag.statsIODA.gen_statistics(ob, var, cycle, stats_dir)
             for plot in plot_types:
-                hofx.diag.plotIODA.gen_diagnostics(ob, var, plot, plot_dir)        
+                hofx.diag.plotIODA.gen_diagnostics(ob, var, cycle, plot, plot_dir)        
 
 
 if __name__ == '__main__':

@@ -53,6 +53,9 @@ def setup_workflow(expyaml):
     search_key='expxmldir'
     expxmldir=set_key(search_key,parsed_expyml)
 
+    search_key='keepdata'
+    keepdata=set_key(search_key,parsed_expyml)
+
 
     # Load extracte values into list.  Echo values to stdout
     replacements = {
@@ -64,6 +67,7 @@ def setup_workflow(expyaml):
         'wrkdir': wrkdir,
         'platform': machine,
         'expxmldir': expxmldir,
+        'keepdata': keepdata,
        }
 
     print(' ')

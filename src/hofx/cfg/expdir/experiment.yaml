@@ -6,13 +6,15 @@
 #  emcpy_homedir:  path to src directory of emcpy clone
 #  wrkdir:  directory to which cycled output files are written
 #  expxmldir:  directory to which xml file is written
+#  keepdata:  retain (yes) or remove (no) directories/files in wrkdir upon completion of each cycle
 expname: 'prhofx'
 begdate: '2020121500'
 enddate: '2020121600'
-hofx_homedir: '/work/noaa/da/rtreadon/git/hofxcs/develop/src'  # change to your path
+hofx_homedir: '/work/noaa/da/rtreadon/git/JEDI-Eval/develop/src'  # change to your path
 emcpy_homedir: '/work/noaa/da/rtreadon/git/emcpy/src'          # change to your path
 wrkdir: '/work/noaa/stmp/rtreadon/rocoto'                      # change to your path
 expxmldir: '/work/noaa/da/rtreadon/para_gfs/prhofx'            # change to your path
+keepdata: 'no'
 #
 # Set bundle and jedi_bundle dpending on machine
 ##bundle: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/bundle
@@ -65,6 +67,7 @@ root_plot_dir: $(experiment_dir)/plots
 plot_dir: $(root_plot_dir)/{{plot_current_cycle}}
 www_dir: $(experiment_dir)/www
 www_tar: true
+stats_dir: $(experiment_dir)/stats/
 diag_types:
 - scatter_hofxdiff
 - spatial_gsiomf
