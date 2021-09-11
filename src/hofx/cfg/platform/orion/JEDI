@@ -14,6 +14,6 @@ make_cmd="make -j8"
 #ecbuild_cmd="ecbuild -DMPIEXEC_EXECUTABLE=/opt/slurm/bin/srun -DMPIEXEC_NUMPROC_FLAG='-n' -DBUILD_PYTHON_BINDINGS=ON -DBUILD_IODA_CONVERTERS=ON"
 ecbuild_cmd="ecbuild -DMPIEXEC_EXECUTABLE=/opt/slurm/bin/srun -DMPIEXEC_NUMPROC_FLAG='-n'"
 scheduler="slurm"
-APRUN="srun --export=ALL"
+export APRUN="srun --export=ALL"
 
 export PYTHONPATH=$PYTHONPATH:/work/noaa/da/cmartin/JEDI/ioda-bundle/build/lib/python3.7

@@ -17,17 +17,6 @@ WORKDIR=$2
 MYPATH=`readlink -f "$0"`
 MYDIR=`dirname "$MYPATH"`
 gitdir=$MYDIR/..
-alias source_yaml=$gitdir/bin/source_yaml
-alias create_bundle=$gitdir/bin/create_bundle
-alias detect_host=$gitdir/bin/detect_host
-shopt -s expand_aliases
-
-#---- get machine and setup runtime environment
-set +eux
-machine=${machine:-$(detect_host)}
-source $gitdir/cfg/platform/$machine/JEDI
-export R2D2_CONFIG=$gitdir/cfg/platform/$machine/r2d2_config.yaml
-set -eux
 
 mkdir -p $WORKDIR
 cd $WORKDIR
