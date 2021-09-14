@@ -1,4 +1,4 @@
-export PYTHONPATH=$HOFX_HOMEDIR:$EMCPY_HOMEDIR
+export PYTHONPATH=$HOFX_HOMEDIR
 
 #---- other variables
 alias source_yaml=$HOFX_HOMEDIR/hofx/bin/source_yaml

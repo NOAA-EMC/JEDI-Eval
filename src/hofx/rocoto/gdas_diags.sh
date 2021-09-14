@@ -4,6 +4,7 @@ set -eux
 
 #---- setup runtime evironment
 source $HOFX_HOMEDIR/hofx/cfg/setup
+export PYTHONPATH=$PYTHONPATH:$EMCPY_HOMEDIR
 
 #---- execute diags
 $HOFX_HOMEDIR/hofx/scripts/diags.sh $HOFX_HOMEDIR/hofx/cfg/expdir $ROTDIR/hofx_tmp/$CDATE
