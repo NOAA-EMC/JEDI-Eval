@@ -6,9 +6,11 @@ if len(sys.argv) < 2:
     exit(1)
 
 config = YAMLFile(sys.argv[1])
-if len(sys.argv) > 4:
+if len(sys.argv) >= 4:
     for key in sys.argv[3:]:
-        print(f'{key}="{config[sys.argv[2]][key]}"')
+        key_clean = key.replace(' ', '_')
+        print(f'{key_clean}="{config[sys.argv[2]][key]}"')
 else:
    key = sys.argv[2]
-   print(f'{key}="{config[key]}"')
+   key_clean = key.replace(' ', '_')
+   print(f'{key_clean}="{config[key]}"')
