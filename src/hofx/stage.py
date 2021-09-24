@@ -103,12 +103,13 @@ def obs(config):
         )
         # try to grab bias correction files too
         if 'obs bias' in ob:
+            bkg_time = Hour(config['cycle']) - DateIncrement(config['step_cycle'])
             satbias = ob['obs bias']['input file']
             fetch(
                 type='bc',
                 provider=config['obs']['bc_src'],
                 experiment=config['obs']['bc_dump'],
-                date=config['cycle'],
+                date=bkg_time,
                 obs_type=obname,
                 target_file=satbias,
                 file_type='satbias',
@@ -123,7 +124,7 @@ def obs(config):
                 type='bc',
                 provider=config['obs']['bc_src'],
                 experiment=config['obs']['bc_dump'],
-                date=config['cycle'],
+                date=bkg_time,
                 obs_type=obname,
                 target_file=tlapse,
                 file_type='tlapse',
