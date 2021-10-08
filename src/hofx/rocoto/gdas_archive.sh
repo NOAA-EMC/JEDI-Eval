@@ -2,16 +2,18 @@
 
 set -eux
 
-export PYTHONPATH=$HOFX_HOMEDIR
+#---- setup runtime evironment
+source $HOFX_HOMEDIR/hofx/cfg/setup
 
+#---- execute archive
 $HOFX_HOMEDIR/hofx/scripts/archive.sh $HOFX_HOMEDIR/hofx/cfg/expdir $ROTDIR/hofx_tmp/$CDATE
 rc=$?
 
-# If requested, remove stage directory for current cycle 
+#---- if requested, remove stage directory for current cycle 
 KEEPDATA=$(echo ${KEEPDATA:-"NO"} | tr a-z A-Z)
 if [[ $KEEPDATA = "NO" ]]; then
-    string=`grep "cycle" $ROTDIR/hofx_tmp/$CDATE/archive.yaml | cut -d "'" -f2-2 | head -1`
-    DATAROOT=$ROTDIR/${string}
+    eval $(source_yaml ${ROTDIR}/hofx_tmp/${CDATE}/archive.yaml archive cycle )
+    DATAROOT=$ROTDIR/${cycle}
     [[ -d $DATAROOT ]] && rm -rf $DATAROOT
 fi
 
