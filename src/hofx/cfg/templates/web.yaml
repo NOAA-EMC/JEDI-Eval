@@ -1,5 +1,5 @@
 web:
   experiment: $(experiment)
   experiment_dir: $(experiment_dir)
-  root_plot_dir: $(experiment_dir)/plots
+  root_plot_dir: $(root_plot_dir)
   www_dir: $(experiment_dir)/www
