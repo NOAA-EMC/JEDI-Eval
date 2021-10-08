@@ -3,4 +3,3 @@ web:
   experiment_dir: $(experiment_dir)
   root_plot_dir: $(experiment_dir)/plots
   www_dir: $(experiment_dir)/www
-  www_tar: $(www_tar)

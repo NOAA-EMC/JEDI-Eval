@@ -29,6 +29,8 @@ def run_gen_www(yaml):
     plot_dirs = glob.glob(os.path.join(root_plot_dir,'*'))
     # call function to create website
     hofx.web.gen_site(www_dir, plot_dirs, web_cfg['experiment'])
+    # link plot directory to www directory for viewing online
+    os.symlink(root_plot_dir, os.path.join(www_dir, 'plots'))
 
 
 if __name__ == '__main__':
