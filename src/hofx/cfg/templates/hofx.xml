@@ -22,13 +22,13 @@
 	<!ENTITY RUN_ENVIR "rocoto">
 
 	<!-- Work directory -->
-  <!ENTITY WRKDIR "wrkdir">
+	<!ENTITY WRKDIR "wrkdir">
 	<!ENTITY ROTDIR "&WRKDIR;/&PSLOT;">
-  <!ENTITY KEEPDATA "keepdata">
+	<!ENTITY KEEPDATA "keepdata">
 
-  <!-- HOFX and EMCPY directories -->
-  <!ENTITY HOFX_HOMEDIR "hofx_homedir">
-  <!ENTITY EMCPY_HOMEDIR "emcpy_homedir">
+	<!-- HOFX and EMCPY directories -->
+	<!ENTITY HOFX_HOMEDIR "hofx_homedir">
+	<!ENTITY EMCPY_HOMEDIR "emcpy_homedir">
 
 	<!-- Machine related entities -->
 	<!ENTITY ACCOUNT    "da-cpu">
