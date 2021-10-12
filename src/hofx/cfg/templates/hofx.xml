@@ -8,7 +8,7 @@
 	AUTHOR:
 
 	NOTES:
-		Users need to first configure ../cfg/expdir/experiments.yaml 
+		Users need to first configure ../cfg/expdir/experiments.yaml
                 and then execute setup_workflow.py to generate a user
                 specific xml from this xml template
 	-->
@@ -22,13 +22,13 @@
 	<!ENTITY RUN_ENVIR "rocoto">
 
 	<!-- Work directory -->
-        <!ENTITY WRKDIR "wrkdir">
+	<!ENTITY WRKDIR "wrkdir">
 	<!ENTITY ROTDIR "&WRKDIR;/&PSLOT;">
-        <!ENTITY KEEPDATA "keepdata">
+	<!ENTITY KEEPDATA "keepdata">
 
-        <!-- HOFX and EMCPY directories -->
-        <!ENTITY HOFX_HOMEDIR "hofx_homedir">
-        <!ENTITY EMCPY_HOMEDIR "emcpy_homedir">
+	<!-- HOFX and EMCPY directories -->
+	<!ENTITY HOFX_HOMEDIR "hofx_homedir">
+	<!ENTITY EMCPY_HOMEDIR "emcpy_homedir">
 
 	<!-- Machine related entities -->
 	<!ENTITY ACCOUNT    "da-cpu">
@@ -37,7 +37,7 @@
 	<!ENTITY PARTITION_BATCH "platform">
 	<!ENTITY PARTITION_SERVICE "service">
 	<!ENTITY SCHEDULER  "slurm">
-        <!ENTITY machine "platform">
+	<!ENTITY machine "platform">
 
 	<!-- ROCOTO parameters that control workflow -->
 	<!ENTITY CYCLETHROTTLE "3">
@@ -74,7 +74,11 @@
 	<!ENTITY RESOURCES_DIAGS_GDAS "<nodes>1:ppn=1:tpp=1</nodes>">
 	<!ENTITY NATIVE_DIAGS_GDAS    "--export=NONE">
 
-
+	<!ENTITY QUEUE_WEB_GDAS     "&QUEUE;">
+	<!ENTITY PARTITION_WEB_GDAS "&PARTITION_BATCH;">
+	<!ENTITY WALLTIME_WEB_GDAS  "00:15:00">
+	<!ENTITY RESOURCES_WEB_GDAS "<nodes>1:ppn=1:tpp=1</nodes>">
+	<!ENTITY NATIVE_WEB_GDAS    "--export=NONE">
 
 ]>
 
@@ -95,7 +99,7 @@
 	<partition>&PARTITION_BATCH;</partition>
 	&RESOURCES_STAGE_GDAS;
 	<walltime>&WALLTIME_STAGE_GDAS;</walltime>
-	
+
 	<native>&NATIVE_STAGE_GDAS;</native>
 
 	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_stage.log</cyclestr></join>
@@ -126,7 +130,7 @@
 	<partition>&PARTITION_BATCH;</partition>
 	&RESOURCES_HOFX_GDAS;
 	<walltime>&WALLTIME_HOFX_GDAS;</walltime>
-	
+
 	<native>&NATIVE_HOFX_GDAS;</native>
 
 	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_hofx.log</cyclestr></join>
@@ -156,7 +160,7 @@
 	<partition>&PARTITION_BATCH;</partition>
 	&RESOURCES_MERGE_GDAS;
 	<walltime>&WALLTIME_MERGE_GDAS;</walltime>
-	
+
 	<native>&NATIVE_MERGE_GDAS;</native>
 
 	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_merge.log</cyclestr></join>
@@ -186,7 +190,7 @@
 	<partition>&PARTITION_BATCH;</partition>
 	&RESOURCES_ARCHIVE_GDAS;
 	<walltime>&WALLTIME_ARCHIVE_GDAS;</walltime>
-	
+
 	<native>&NATIVE_ARCHIVE_GDAS;</native>
 
 	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_archive.log</cyclestr></join>
@@ -217,7 +221,7 @@
 	<partition>&PARTITION_BATCH;</partition>
 	&RESOURCES_DIAGS_GDAS;
 	<walltime>&WALLTIME_DIAGS_GDAS;</walltime>
-	
+
 	<native>&NATIVE_DIAGS_GDAS;</native>
 
 	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_diags.log</cyclestr></join>
@@ -234,6 +238,38 @@
 	<dependency>
 		<and>
 			<taskdep task="gdas_archive"/>
+		</and>
+	</dependency>
+
+</task>
+
+<task name="gdas_web" cycledefs="gdas" maxtries="&MAXTRIES;">
+
+	<command>&HOFX_HOMEDIR;/hofx/rocoto/gdas_web.sh</command>
+
+	<jobname><cyclestr>&PSLOT;_gdas_web_@H</cyclestr></jobname>
+	<account>&ACCOUNT;</account>
+	<queue>&QUEUE_WEB_GDAS;</queue>
+	<partition>&PARTITION_BATCH;</partition>
+	&RESOURCES_WEB_GDAS;
+	<walltime>&WALLTIME_WEB_GDAS;</walltime>
+
+	<native>&NATIVE_WEB_GDAS;</native>
+
+	<join><cyclestr>&ROTDIR;/logs/@Y@m@d@H/gdas_web.log</cyclestr></join>
+
+	<envar><name>SLURM_SET</name><value>YES</value></envar>
+        <envar><name>RUN_ENVIR</name><value>&RUN_ENVIR;</value></envar>
+        <envar><name>machine</name><value>&machine;</value></envar>
+        <envar><name>HOFX_HOMEDIR</name><value>&HOFX_HOMEDIR;</value></envar>
+        <envar><name>EMCPY_HOMEDIR</name><value>&EMCPY_HOMEDIR;</value></envar>
+        <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
+        <envar><name>KEEPDATA</name><value>&KEEPDATA;</value></envar>
+	<envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+
+	<dependency>
+		<and>
+			<taskdep task="gdas_diags"/>
 		</and>
 	</dependency>
 

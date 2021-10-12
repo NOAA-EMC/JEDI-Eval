@@ -14,7 +14,7 @@ hofx_homedir: '/work/noaa/da/rtreadon/git/JEDI-Eval/develop/src'  # change to yo
 emcpy_homedir: '/work/noaa/da/rtreadon/git/emcpy/src'          # change to your path
 wrkdir: '/work/noaa/stmp/rtreadon/rocoto'                      # change to your path
 expxmldir: '/work/noaa/da/rtreadon/para_gfs/prhofx'            # change to your path
-keepdata: 'no'       
+keepdata: 'no'
 #
 # Set bundle and jedi_bundle dpending on machine
 ##bundle: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/bundle
@@ -48,7 +48,7 @@ run_dir: $(experiment_dir)/{{current_cycle}}/RESTART
 account: da-cpu
 obs_dir: $(experiment_dir)/{{cycle}}
 obs_db: ufo_eval_ref
-obs_dump: gdas_f006
+obs_dump: gdas_f006_nofov_nonsst_noxl
 ##obs_dump: oper_3d
 obs_src: ncdiag
 bc_src: gsi
@@ -63,10 +63,14 @@ diag_db: local
 diag_dir: $(experiment_dir)/diags
 window_offset: PT3H
 step_cycle: PT6H
-plot_dir: $(experiment_dir)/plots/{{current_cycle}}
+root_plot_dir: $(experiment_dir)/output/plots
+plot_dir: $(root_plot_dir)/{{plot_current_cycle}}
+www_dir: $(experiment_dir)/output/www
 stats_dir: $(experiment_dir)/stats/
 diag_types:
 - scatter_hofxdiff
+- scatter_hofxbias
+- spatial_hofxdiff
 - spatial_gsiomf
 - spatial_ufoomf
 obs_list:
