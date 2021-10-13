@@ -335,6 +335,7 @@ def _scatter(df, diag):
             df[f"{diag.data_vars[0]}/{diag.variable}"].to_numpy(),
             df[f"{diag.data_vars[-1]}/{diag.variable}"].to_numpy())
     plotobj.add_linear_regression()
+    plotobj.density_scatter()
 
     # Generate plot and draw data
     myplot = CreatePlot(figsize=(10, 8))
@@ -410,6 +411,7 @@ def gen_diagnostics(ob_dict, variable, cycle, plot_type, plot_dir='./'):
             fig.savefig(
                 f"{os.path.join(diag.outfig, diag.metadata['savefile'])}.png",
                 bbox_inches='tight', pad_inches=0.1)
+            plt.close(fig)
             diag.variable = variable
 
     else:
@@ -422,5 +424,6 @@ def gen_diagnostics(ob_dict, variable, cycle, plot_type, plot_dir='./'):
         fig.savefig(
             f"{os.path.join(diag.outfig,diag.metadata['savefile'])}.png",
             bbox_inches='tight', pad_inches=0.1)
+        plt.close(fig)
 
     return

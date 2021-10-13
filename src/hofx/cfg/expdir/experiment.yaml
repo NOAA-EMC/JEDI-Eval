@@ -7,20 +7,18 @@
 #  wrkdir:  directory to which cycled output files are written
 #  expxmldir:  directory to which xml file is written
 #  keepdata:  retain (yes) or remove (no) directories/files in wrkdir upon completion of each cycle
-expname: 'prhofx'
+expname: 'example_jedi_eval'
 begdate: '2020121500'
 enddate: '2020121600'
-hofx_homedir: '/work/noaa/da/rtreadon/git/JEDI-Eval/develop/src'  # change to your path
-emcpy_homedir: '/work/noaa/da/rtreadon/git/emcpy/src'          # change to your path
-wrkdir: '/work/noaa/stmp/rtreadon/rocoto'                      # change to your path
-expxmldir: '/work/noaa/da/rtreadon/para_gfs/prhofx'            # change to your path
+hofx_homedir: '/work/noaa/stmp/cmartin/git/JEDI-Eval/src'  # change to your path
+emcpy_homedir: '/work/noaa/stmp/cmartin/git/emcpy/src'          # change to your path
+wrkdir: '/work/noaa/stmp/cmartin/rocoto'                      # change to your path
+expxmldir: '/work/noaa/da/cmartin/para_gfs/testweb'            # change to your path
 keepdata: 'no'
 #
 # Set bundle and jedi_bundle dpending on machine
-##bundle: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/bundle
-##jedi_build: /scratch1/NCEPDEV/da/Cory.R.Martin/JEDI/testing/intel/build-20210629
-bundle: /work/noaa/da/cmartin/JEDI/testing/intel/bundle
-jedi_build: /work/noaa/da/cmartin/JEDI/stable/intel/build
+bundle: /work/noaa/da/cmartin/JEDI/builds/ufo_prelim/fv3-bundle
+jedi_build: /work/noaa/da/cmartin/JEDI/builds/ufo_prelim/build
 #
 # End of user settings
 #
@@ -49,7 +47,6 @@ account: da-cpu
 obs_dir: $(experiment_dir)/{{cycle}}
 obs_db: ufo_eval_ref
 obs_dump: gdas_f006_nofov_nonsst_noxl
-##obs_dump: oper_3d
 obs_src: ncdiag
 bc_src: gsi
 bc_dump: oper
@@ -74,5 +71,6 @@ diag_types:
 - spatial_gsiomf
 - spatial_ufoomf
 obs_list:
-- $<< $(bundle)/ufo/ewok/jedi-gdas/aircraft.yaml
 - $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_n19.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/aircraft.yaml
+- $<< $(bundle)/ufo/ewok/jedi-gdas/ompstc8_npp.yaml

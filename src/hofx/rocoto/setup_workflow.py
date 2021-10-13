@@ -56,6 +56,9 @@ def setup_workflow(expyaml):
     search_key='keepdata'
     keepdata=set_key(search_key,parsed_expyml)
 
+    ppndiags = 1
+    if machine in ['hera', 'orion']:
+        ppndiags = 40
 
     # Load extracte values into list.  Echo values to stdout
     replacements = {
@@ -68,6 +71,7 @@ def setup_workflow(expyaml):
         'platform': machine,
         'expxmldir': expxmldir,
         'keepdata': keepdata,
+        'ppndiags': str(ppndiags),
        }
 
     print(' ')
@@ -80,7 +84,7 @@ def setup_workflow(expyaml):
         print(' ')
         print('***WARNING*** mkdir {}'.format(expxmldir))
         os.makedirs(expxmldir)
-       
+
 #   Create filename for workflow xml
     expxml=expxmldir + '/' + expname + '.xml'
     print(' ')
