@@ -67,9 +67,9 @@ stats_dir: $(experiment_dir)/stats/
 diag_types:
 - scatter_hofxdiff
 - scatter_hofxbias
+- scatter_omfdiff
 - spatial_hofxdiff
-- spatial_gsiomf
-- spatial_ufoomf
+- spatial_omfdiff
 obs_list:
 - $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_n19.yaml
 - $<< $(bundle)/ufo/ewok/jedi-gdas/aircraft.yaml
