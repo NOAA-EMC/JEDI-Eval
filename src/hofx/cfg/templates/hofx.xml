@@ -38,6 +38,7 @@
 	<!ENTITY PARTITION_SERVICE "service">
 	<!ENTITY SCHEDULER  "slurm">
 	<!ENTITY machine "platform">
+	<!ENTITY PPNDIAGS "ppndiags">
 
 	<!-- ROCOTO parameters that control workflow -->
 	<!ENTITY CYCLETHROTTLE "3">
@@ -71,7 +72,7 @@
 	<!ENTITY QUEUE_DIAGS_GDAS     "&QUEUE;">
 	<!ENTITY PARTITION_DIAGS_GDAS "&PARTITION_BATCH;">
 	<!ENTITY WALLTIME_DIAGS_GDAS  "01:15:00">
-	<!ENTITY RESOURCES_DIAGS_GDAS "<nodes>1:ppn=1:tpp=1</nodes>">
+	<!ENTITY RESOURCES_DIAGS_GDAS "<nodes>1:ppn=&PPNDIAGS;:tpp=1</nodes>">
 	<!ENTITY NATIVE_DIAGS_GDAS    "--export=NONE">
 
 	<!ENTITY QUEUE_WEB_GDAS     "&QUEUE;">
@@ -233,6 +234,7 @@
         <envar><name>EMCPY_HOMEDIR</name><value>&EMCPY_HOMEDIR;</value></envar>
         <envar><name>ROTDIR</name><value>&ROTDIR;</value></envar>
         <envar><name>KEEPDATA</name><value>&KEEPDATA;</value></envar>
+        <envar><name>PPNDIAGS</name><value>&PPNDIAGS;</value></envar>
 	<envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
 
 	<dependency>

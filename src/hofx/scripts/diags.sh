@@ -29,5 +29,5 @@ $gitdir/bin/genYAML diags $EXPDIR $WORKDIR/diags.yaml
 $gitdir/bin/stageJEDI $WORKDIR/diags.yaml
 
 #---- make figures from just this cycle
-$gitdir/bin/plotDiags $WORKDIR/diags.yaml
+$gitdir/bin/plotDiags $WORKDIR/diags.yaml --nprocs=$PPNDIAGS
 
