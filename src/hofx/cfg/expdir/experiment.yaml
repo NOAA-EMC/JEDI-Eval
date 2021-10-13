@@ -12,8 +12,8 @@ begdate: '2020121500'
 enddate: '2020121600'
 hofx_homedir: '/work/noaa/stmp/cmartin/git/JEDI-Eval/src'  # change to your path
 emcpy_homedir: '/work/noaa/stmp/cmartin/git/emcpy/src'          # change to your path
-wrkdir: '/work/noaa/stmp/cmartin/rocoto'                      # change to your path
-expxmldir: '/work/noaa/da/cmartin/para_gfs/testweb'            # change to your path
+wrkdir: '/work/noaa/stmp/cmartin/rocoto'                        # change to your path
+expxmldir: '/work/noaa/da/cmartin/para_gfs/example_jedi_eval'   # change to your path
 keepdata: 'no'
 #
 # Set bundle and jedi_bundle dpending on machine
