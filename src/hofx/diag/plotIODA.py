@@ -358,6 +358,7 @@ def _scatter(df, diag):
             df[f"{diag.data_vars[0]}/{diag.variable}"].to_numpy(),
             df[f"{diag.data_vars[-1]}/{diag.variable}"].to_numpy())
     plotobj.add_linear_regression()
+    plotobj.lr_color = 'red'
     plotobj.density_scatter()
 
     # Generate plot and draw data
@@ -378,7 +379,7 @@ def _scatter(df, diag):
                      fontweight='semibold')
     myplot.add_xlabel(xlabel=diag.metadata['xlabel'])
     myplot.add_ylabel(ylabel=diag.metadata['ylabel'])
-    myplot.add_grid()
+    myplot.add_grid(color='lightgray')
     myplot.add_legend()
 
     # Return figure
