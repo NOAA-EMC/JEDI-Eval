@@ -359,6 +359,7 @@ def _scatter(df, diag):
             df[f"{diag.data_vars[-1]}/{diag.variable}"].to_numpy())
     plotobj.add_linear_regression()
     plotobj.density_scatter()
+    plotobj.cmap = 'turbo'
 
     # Generate plot and draw data
     myplot = CreatePlot(figsize=(10, 8))
@@ -380,6 +381,8 @@ def _scatter(df, diag):
     myplot.add_ylabel(ylabel=diag.metadata['ylabel'])
     myplot.add_grid(color='lightgray')
     myplot.add_legend()
+    myplot.add_colorbar(label='Interpolated Probability Density Function',
+                        orientation='vertical')
 
     # Return figure
     fig = myplot.return_figure()
