@@ -272,7 +272,7 @@ class IODAdiagnostic:
         self.metadata['vmax'] = varspecs.vmax
         self.metadata['cmap'] = varspecs.cmap
 
-        if self.eval_var == 'omfdiff':
+        if self.eval_var in ['omfdiff', 'hofxdiff']:
              self.metadata['vmin'] = varspecs.vmin / 100.
              self.metadata['vmax'] = varspecs.vmax / 100.
 
@@ -363,6 +363,12 @@ def _scatter(df, diag):
     # Generate plot and draw data
     myplot = CreatePlot(figsize=(10, 8))
     myplot.draw_data([plotobj])
+
+    if diag.eval_var in ['omfdiff']:
+        max1 = max(abs(max(plotobj.x)), abs(max(plotobj.y)))
+        min1 = max1 * -1.
+        myplot.set_xlim(min1,max1)
+        myplot.set_ylim(min1,max1)
 
     # Add features to plot
     myplot.add_title(label=diag.metadata['title'],

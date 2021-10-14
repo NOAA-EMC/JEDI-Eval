@@ -70,6 +70,8 @@ diag_types:
 - scatter_omfdiff
 - spatial_hofxdiff
 - spatial_omfdiff
+- spatial_gsiomf
+- spatial_ufoomf
 obs_list:
 - $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_n19.yaml
 - $<< $(bundle)/ufo/ewok/jedi-gdas/aircraft.yaml
