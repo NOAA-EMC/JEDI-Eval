@@ -125,15 +125,15 @@ class IODAdiagnostic:
         df = df.dropna().reset_index()
 
         # add 'diff' column when data vars has 2 variables
-        if len(self.data_vars) == 2:
+        if len(self.data_vars) >= 2:
             if channel:
                 df[f"diff/{self.variable}_{channel}"] = \
                     df[f"{self.data_vars[0]}/{self.variable}_{channel}"] - \
-                    df[f"{self.data_vars[-1]}/{self.variable}_{channel}"]
+                    df[f"{self.data_vars[1]}/{self.variable}_{channel}"]
             else:
                 df[f"diff/{self.variable}"] = \
                     df[f"{self.data_vars[0]}/{self.variable}"] - \
-                    df[f"{self.data_vars[-1]}/{self.variable}"]
+                    df[f"{self.data_vars[1]}/{self.variable}"]
 
         return df
 
@@ -185,6 +185,17 @@ class IODAdiagnostic:
                 },
                 'plot var': 'diff',
                 'data vars': ['GsiHofXBc', 'hofx']
+            },
+            'omfdiff': {
+                'plot opts': {
+                    'domain': 'global',
+                    'projection': 'plcarr',
+                    'xlabel': 'O-F GSI',
+                    'ylabel': 'O-F UFO',
+                    'title tag': 'O-F Comparison'
+                },
+                'plot var': 'diff',
+                'data vars': ['GsiHofXBc', 'hofx', 'ObsValue']
             },
             'gsiomf': {
                 'plot opts': {
@@ -260,6 +271,11 @@ class IODAdiagnostic:
         self.metadata['vmin'] = varspecs.vmin
         self.metadata['vmax'] = varspecs.vmax
         self.metadata['cmap'] = varspecs.cmap
+
+        if self.eval_var in ['omfdiff', 'hofxdiff']:
+             self.metadata['vmin'] = varspecs.vmin / 100.
+             self.metadata['vmax'] = varspecs.vmax / 100.
+
         self.metadata['label'] = f"{varspecs.name} ({varspecs.units})"
 
         if channel:
@@ -330,6 +346,13 @@ def _scatter(df, diag):
         plotobj = Scatter(
             df[f"{diag.data_vars[0]}/{diag.variable}"].to_numpy(),
             df[f"{diag.plot_var}/{diag.variable}"].to_numpy())
+    elif diag.eval_var in ['omfdiff']:
+        # need to get O-F from both for scatter
+        omf_gsi = df[f"{diag.data_vars[-1]}/{diag.variable}"].to_numpy() - \
+                  df[f"{diag.data_vars[0]}/{diag.variable}"].to_numpy()
+        omf_ufo = df[f"{diag.data_vars[-1]}/{diag.variable}"].to_numpy() - \
+                  df[f"{diag.data_vars[1]}/{diag.variable}"].to_numpy()
+        plotobj = Scatter(omf_gsi, omf_ufo)
     else:
         plotobj = Scatter(
             df[f"{diag.data_vars[0]}/{diag.variable}"].to_numpy(),
@@ -341,6 +364,12 @@ def _scatter(df, diag):
     myplot = CreatePlot(figsize=(10, 8))
     myplot.draw_data([plotobj])
 
+    if diag.eval_var in ['omfdiff']:
+        max1 = max(abs(max(plotobj.x)), abs(max(plotobj.y)))
+        min1 = max1 * -1.
+        myplot.set_xlim(min1,max1)
+        myplot.set_ylim(min1,max1)
+
     # Add features to plot
     myplot.add_title(label=diag.metadata['title'],
                      fontsize=12, loc='left')
@@ -349,8 +378,12 @@ def _scatter(df, diag):
                      fontweight='semibold')
     myplot.add_xlabel(xlabel=diag.metadata['xlabel'])
     myplot.add_ylabel(ylabel=diag.metadata['ylabel'])
-    myplot.add_grid()
+    myplot.add_grid(color='lightgray')
+    if diag.eval_var in ['omfdiff', 'hofxdiff']:
+        myplot.add_unity(color='lightgray')
     myplot.add_legend()
+    myplot.add_colorbar(label='Percent of Observations',
+                        orientation='vertical')
 
     # Return figure
     fig = myplot.return_figure()

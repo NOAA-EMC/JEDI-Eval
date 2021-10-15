@@ -67,7 +67,9 @@ stats_dir: $(experiment_dir)/stats/
 diag_types:
 - scatter_hofxdiff
 - scatter_hofxbias
+- scatter_omfdiff
 - spatial_hofxdiff
+- spatial_omfdiff
 - spatial_gsiomf
 - spatial_ufoomf
 obs_list:
