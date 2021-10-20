@@ -21,6 +21,8 @@ def run_plot(yaml, nprocs):
     plot_types = plot_cfg['types']
     # get list of observations
     ob_list = plot_cfg['diags']['observations']
+    # get subset of channels if applicable
+    ch_subsets = plot_cfg['ch_subsets']
     # cycle
     cycle = plot_cfg['cycle']
     # diag dir
@@ -34,14 +36,19 @@ def run_plot(yaml, nprocs):
     # use multiprocessing to put each obsspace on its own processor
     p = Pool(processes=nprocs)
     results = p.map(partial(run_mp_plots, diag_dir=diag_dir, plot_types=plot_types,
-                           cycle=cycle, plot_dir=plot_dir, stats_dir=stats_dir), ob_list)
+                           cycle=cycle, plot_dir=plot_dir, stats_dir=stats_dir,
+                           ch_subsets=ch_subsets), ob_list)
     p.close()
     p.join()
 
 
-def run_mp_plots(ob, diag_dir='./', plot_types=[], stats_dir='./', plot_dir='./', cycle=None):
+def run_mp_plots(ob, diag_dir='./', plot_types=[], stats_dir='./', plot_dir='./',
+                 ch_subsets={}, cycle=None):
     var_list = ob['obs space']['simulated variables']
     ob['diag_dir'] = diag_dir
+    sensor = ob['obs space']['name'].split('_')[0]
+    if sensor in ch_subsets:
+        ob['ch_subset'] = ch_subsets[sensor]
     for var in var_list:
         hofx.diag.statsIODA.gen_statistics(ob, var, cycle, stats_dir)
         for plot in plot_types:

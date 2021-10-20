@@ -60,6 +60,7 @@ diag_db: local
 diag_dir: $(experiment_dir)/diags
 window_offset: PT3H
 step_cycle: PT6H
+# below are things for diagnostic output
 root_plot_dir: $(experiment_dir)/output/plots
 plot_dir: $(root_plot_dir)/{{plot_current_cycle}}
 www_dir: $(experiment_dir)/output/www
@@ -76,3 +77,14 @@ obs_list:
 - $<< $(bundle)/ufo/ewok/jedi-gdas/amsua_n19.yaml
 - $<< $(bundle)/ufo/ewok/jedi-gdas/aircraft.yaml
 - $<< $(bundle)/ufo/ewok/jedi-gdas/ompstc8_npp.yaml
+ch_subsets:
+  airs: [21, 75, 123, 151, 172, 207, 252, 305, 475, 787,
+         791, 914, 1082, 1304, 1382, 1449, 1477,
+         1519, 1669, 1694, 1766, 1868, 1924, 2100, 2209]
+  iasi: [92, 119, 135, 167, 193, 236, 260, 296, 345, 375,
+         401, 546, 646, 662, 668, 756, 867, 906, 1133, 1479,
+         1786, 2019, 2119, 2239, 2271, 2321, 2398, 2701, 2889, 2958,
+         2993, 3002, 3049, 3105, 3110, 5381, 5399, 5480, 6391, 7475]
+  cris: [31, 47, 59, 71, 83, 95, 109, 121, 133, 145,
+         157, 159, 183, 211, 332, 482, 611, 713, 890, 995,
+         1008, 1022, 1058, 1245, 1499, 1624, 1939, 1960, 1968, 2153]

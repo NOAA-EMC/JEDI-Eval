@@ -428,6 +428,10 @@ def gen_diagnostics(ob_dict, variable, cycle, plot_type, plot_dir='./'):
         # Grabs channels
         inputchans = diag.get_input_channels(diag.str_channels)
 
+        # only process a subset of channels if that is specified
+        if 'ch_subset' in ob_dict:
+            inputchans = ob_dict['ch_subset']
+
         # loops through each channel input to create diag
         for channel in inputchans:
             # determines the eval type

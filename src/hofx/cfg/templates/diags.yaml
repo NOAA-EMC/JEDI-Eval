@@ -26,3 +26,4 @@ plot:
     diag_dir: '{{diag_dir}}'
     observations: $(obs_list)
   types: $(diag_types)
+  ch_subsets: $(ch_subsets)
