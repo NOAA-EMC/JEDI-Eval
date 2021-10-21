@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import click
 import hofx
+import hofx.diag
 import sys
 
 @click.command()
@@ -18,7 +19,7 @@ def run_plot_exe(yaml):
     if 'plot' in config.keys():
         plot_list = config['plot']
         for entry in plot_list:
-            print(entry)
+            hofx.diag.plotIODA.create_single_figure(entry)
     else:
         print('No plot list in input YAML. ERROR.')
         sys.exit(1)

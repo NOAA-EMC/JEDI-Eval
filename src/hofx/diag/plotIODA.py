@@ -460,3 +460,39 @@ def gen_diagnostics(ob_dict, variable, cycle, plot_type, plot_dir='./'):
         plt.close(fig)
 
     return
+
+
+def create_single_figure(fig_dict):
+    """
+    Driver function to take an input dict from YAML
+    and produce the specified figure
+    """
+
+    # massage input to match existing paradigm
+    ob_dict = {
+        'obs space': {
+            'name': fig_dict.get('name', ''),
+            'obsdataout': {'obsfile': fig_dict.get('path', './test.nc4')},
+        },
+        'diag_dir': os.path.dirname(fig_dict['path']),
+    }
+    variable = fig_dict['variable']
+    cycle = fig_dict['cycle']
+    plot_type = f"custom_{fig_dict['plot type']}"
+    plot_dir = fig_dict.get('outdir', './')
+
+    # create object
+    diag = IODAdiagnostic(ob_dict, variable, cycle, plot_type, plot_dir)
+
+    # Gets obspace
+    obsspace = ioda.ObsSpace(diag.obspath)
+
+    # do something if channel in input YAML
+    if 'channel' in fig_dict.keys():
+        inputchans = diag.get_input_channels(fig_dict['channel'])
+        print(channel)
+    else:
+        print('nothing')
+    return
+
+
