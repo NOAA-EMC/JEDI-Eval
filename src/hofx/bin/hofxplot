@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+import click
+import hofx
+import sys
+
+@click.command()
+@click.argument('yaml', type=click.Path(exists=True))
+def run_plot_exe(yaml):
+    """
+    run_plot_exe(yaml)
+    based on input YAML file, will generate plots
+    to support JEDI UFO evaluation
+    """
+    config = hofx.configuration.read_yaml(yaml)
+    # print things if print exists, otherwise plot things
+    if 'dump' in config.keys():
+        print('temp dump')
+    if 'plot' in config.keys():
+        plot_list = config['plot']
+        for entry in plot_list:
+            print(entry)
+    else:
+        print('No plot list in input YAML. ERROR.')
+        sys.exit(1)
+
+
+if __name__ == '__main__':
+    run_plot_exe()
